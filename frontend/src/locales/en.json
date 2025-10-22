@@ -11,7 +11,7 @@
   "change_password_admin_desc": "Change the user's password. This will immediately invalidate the current password and all active sessions.",
   "change_password_desc": "Change your password. This will log you out from all outher active sessions.",
   "choose_username": "Choose a username (3-20 characters)",
-  "cjlu_sso": "China Jiliang University SSO",
+  "cjlu_sso": "Can Tho University SSO",
   "confirm_new_password": "Confirm New Password",
   "confirm_password": "Confirm Password",
   "connect": "Connect",

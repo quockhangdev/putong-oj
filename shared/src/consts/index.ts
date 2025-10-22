@@ -26,7 +26,7 @@ export enum UserPrivilege {
 }
 
 export enum OAuthProvider {
-  CJLU = 'CJLU',
+  CJLU = 'CTU',
 }
 
 export enum OAuthAction {

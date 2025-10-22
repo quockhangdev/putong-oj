@@ -64,9 +64,9 @@ onMounted(() => {
       </div>
       <div class="cursor-pointer" @click="versionDialogVisible = true">
         <div class="font-bold mb-px text-lg">
-          Putong OJ
+          CTU OJ
         </div>
-        <div>Copyright &copy; 2017-2025 CJLU ACM Lab.</div>
+        <div>Copyright &copy; 2025.</div>
       </div>
     </div>
   </div>

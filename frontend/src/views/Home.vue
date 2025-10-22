@@ -55,7 +55,7 @@ onRouteQueryUpdate(fetch)
         中国计量大学在线评测系统
       </span>
       <span v-else class="welcome-text">
-        Welcome to CJLU Online Judge
+        Welcome to CTU Online Judge
       </span>
       <br>
       {{ t('oj.news_list') }}
