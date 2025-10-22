@@ -55,4 +55,4 @@ RUN mkdir -p /app/data /app/logs /app/public/uploads
 EXPOSE 3000/tcp
 VOLUME [ "/app/data", "/app/logs", "/app/public/uploads" ]
 
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
