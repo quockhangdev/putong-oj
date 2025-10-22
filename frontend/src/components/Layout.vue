@@ -33,7 +33,6 @@ const frontend = {
 } as const
 
 const langs = [
-  { label: '简体中文', value: 'zh-CN' },
   { label: 'English', value: 'en-US' },
 ]
 
