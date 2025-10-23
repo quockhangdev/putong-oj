@@ -112,15 +112,15 @@ async function change (contest) {
 
 function del (cid) {
   $Modal.confirm({
-    title: '提示',
-    content: '<p>此操作将永久删除该文件, 是否继续?</p>',
+    title: 'Confirm',
+    content: '<p>This action will permanently delete the file. Continue?</p>',
     onOk: async () => {
       loading = true
       await remove({ cid })
-      $Message.success(`成功删除 ${cid}！`)
+      $Message.success(`Successfully deleted ${cid}!`)
       loading = false
     },
-    onCancel: () => $Message.info('已取消删除！'),
+    onCancel: () => $Message.info('Deletion canceled!'),
   })
 }
 

@@ -48,14 +48,14 @@ async function createNew () {
 
 function del (did) {
   $Modal.confirm({
-    title: '提示',
-    content: '<p>此操作将永久删除该帖子，是否继续？</p>',
+    title: 'Confirmation',
+    content: '<p>This action will permanently delete the post. Continue?</p>',
     onOk: async () => {
       remove({ did })
-      $Message.success(`成功删除 ${did}！`)
+      $Message.success(`Successfully deleted ${did}!`)
     },
     onCancel: () => {
-      $Message.info('已取消删除！')
+      $Message.info('Deletion cancelled.')
     },
   })
 }

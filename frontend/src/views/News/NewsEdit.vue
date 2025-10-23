@@ -35,15 +35,15 @@ async function submit () {
 
 function del (nid) {
   return $Modal.confirm({
-    title: '提示',
-    content: '<p>此操作将永久删除该消息, 是否继续?</p>',
+    title: 'Confirm',
+    content: '<p>This action will permanently delete this news item. Continue?</p>',
     onOk: async () => {
       await newsStore.delete({ nid })
-      $Message.success(`成功删除 ${nid}！`)
+      $Message.success(`Successfully deleted ${nid}!`)
       reload({ page: currentPage })
     },
     onCancel: () => {
-      $Message.info('已取消删除！')
+      $Message.info('Delete canceled.')
     },
   })
 }

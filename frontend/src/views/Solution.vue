@@ -242,7 +242,7 @@ onRouteQueryUpdate(fetch)
     </div>
     <div class="solution-detail">
       <pre v-if="solution.error" class="error"><code>{{ solution.error }}</code></pre>
-      <Button shape="circle" icon="ios-document-outline" @click="onCopy(solution.code)">
+      <Button style="margin-bottom: 10px; margin-top: 10px;" shape="circle" icon="ios-document-outline" @click="onCopy(solution.code)">
         {{ t('oj.click_to_copy_code') }}
       </Button>
       <pre><code v-html="prettyCode(solution.code)" /></pre>

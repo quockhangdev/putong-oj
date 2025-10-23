@@ -41,7 +41,7 @@ onBeforeMount(init)
 <template>
   <div>
     <Problem v-model="problem" />
-    <Button shape="circle" icon="md-paper-plane" @click="submit">
+    <Button style="margin-top: 10px;" shape="circle" icon="md-paper-plane" @click="submit">
       {{ t('oj.submit') }}
     </Button>
     <Spin size="large" fix :show="loading" class="wrap-loading" />

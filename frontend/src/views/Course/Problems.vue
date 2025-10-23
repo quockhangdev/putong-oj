@@ -121,19 +121,19 @@ async function updateSorting () {
 function removeProblem (event: any, pid: number) {
   confirm.require({
     target: event.currentTarget,
-    message: '你确定要从该课程中移除该题目吗？',
+    message: 'Are you sure you want to remove this problem from the course?',
     rejectProps: {
-      label: '取消',
+      label: 'Cancel',
       severity: 'secondary',
       outlined: true,
     },
     acceptProps: {
-      label: '确定',
+      label: 'Confirm',
       severity: 'danger',
     },
     accept: async () => {
       await api.course.removeCourseProblem(course.value.courseId, pid)
-      message.success('题目已从课程中移除')
+      message.success('Problem has been removed from the course')
       fetch()
     },
   })
