@@ -22,6 +22,7 @@ const message = inject('$Message') as typeof Message
 
 const cid = $computed(() => Number.parseInt(route.params.cid as string) || 1)
 const { contest, overview } = storeToRefs(contestStore)
+const { isAdmin } = $(storeToRefs(sessionStore))
 
 const ranklist = ref({} as Ranklist)
 const ranklistInfo = ref({} as RanklistInfo)
@@ -73,7 +74,7 @@ onBeforeUnmount(clearAutoRefresh)
 </script>
 
 <template>
-  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
+  <div v-if="!isAdmin && contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
     <Alert type="info" show-icon>
       {{ t('oj.ranklist_hidden') }}
     </Alert>

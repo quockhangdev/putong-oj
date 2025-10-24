@@ -109,7 +109,7 @@ onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
+  <div v-if="!isAdmin && contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
     <Alert type="info" show-icon style="margin-top: 10px;">
       {{ t('oj.contest_status_hidden') }}
     </Alert>

@@ -315,5 +315,6 @@
   "contest_type": "Contest Type",
   "ranklist_visibility": "Ranklist Visibility",
   "ranklist_hidden": "You cannot view the ranklist because the contest organizer has chosen to hide it.",
-  "contest_status_hidden": "You cannot view the contest status because the contest organizer has chosen to hide it."
+  "contest_status_hidden": "You cannot view the contest status because the contest organizer has chosen to hide it.",
+  "submitSuccess": "Submission successful!"
 }
