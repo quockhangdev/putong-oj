@@ -12,7 +12,6 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
   Object.keys(ranklist).forEach((uid) => {
     const row = ranklist[uid]
     let solved = 0 // Number of problems accepted
-    let partial = 0 // Number of problems partially solved
     let penalty = 0 // Penalty time (minutes), only counted when AC
     for (const pid of contest.list) {
       if (row[pid] == null) continue // No submissions for this problem
@@ -26,7 +25,8 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
         penalty += Math.max(0, Math.floor((submission.acceptedAt - contest.start) / 1000 / 60))
         penalty += submission.failed * PENALTY
       } else if (contest.option.type === contestType.OI && submission.partial) {
-        partial++
+        solved += submission.partial // For OI, add partial score
+        penalty += submission.failed * PENALTY
       }
     }
     list.push({

@@ -180,14 +180,26 @@ onBeforeUnmount(clearAutoRefresh)
               </td>
               <td v-else :key="`${pid} ${3}`" class="table-problem">
                 <router-link
-                  :to="{ name: 'contestStatus', params: { cid }, query: { uid: item.uid, pid: pindex + 1 } }"
+                  :to="{ name: 'contestStatus', params: { cid }, query: { uid:  item.uid, pid: pindex + 1 } }"
                 >
-                  <Space>
-                    <span v-if="contest.option.type === contestType.OI && item[pid].partial" class="cell-failed">
+                  <Space v-if="contest.option.type === contestType.OI">
+                    <span v-if="item[pid].partial" class="cell-failed">
                       {{ item[pid].failed > 0 ? item[pid].partial.toFixed(2) + ` (+${item[pid].failed})` : item[pid].partial.toFixed(2) }}
                     </span>
-                    <span v-if="contest.option.type === contestType.ICPC && item[pid].failed" class="cell-failed">-{{ item[pid].failed }}</span>
-                    <span v-if="contest.option.type === contestType.ICPC && item[pid].pending" class="cell-pending">+{{ item[pid].pending }}</span>
+                    <span v-else-if="item[pid].failed" class="cell-failed">
+                      -{{ item[pid].failed }}
+                    </span>
+                    <span v-else class="cell-pending">
+                      0.00
+                    </span>
+                  </Space>
+                  <Space v-if="contest.option.type === contestType.ICPC">
+                    <span v-if="item[pid].failed" class="cell-failed">
+                      -{{ item[pid].failed }}
+                    </span>
+                    <span v-if="item[pid].pending" class="cell-pending">
+                      +{{ item[pid].pending }}
+                    </span>
                   </Space>
                 </router-link>
               </td>
