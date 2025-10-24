@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useContestStore } from '@/store/modules/contest'
 import { contestLabeling, formate, timePretty } from '@/utils/formate'
+import { contestType } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const contestStore = useContestStore()
@@ -11,6 +12,7 @@ const { contest, overview, solved } = $(storeToRefs(contestStore))
 
 const route = useRoute()
 const cid = $computed(() => Number.parseInt(route.params.cid || 1))
+
 </script>
 
 <template>
@@ -21,7 +23,7 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
       </h2>
       <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
       <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
-      <h4>Contest Type:&nbsp;&nbsp;{{ contest.option.type }}</h4>
+      <h4>Contest Type:&nbsp;&nbsp;{{ Number.parseInt(contest.option.type || 2000) === contestType.ICPC ? "ICPC" : "OI" }}</h4>
     </div>
     <div class="problem-table-container">
       <table class="problem-table">

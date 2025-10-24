@@ -1,7 +1,7 @@
 <script setup>
 import only from 'only'
 import { storeToRefs } from 'pinia'
-import { Badge, Button, Input, Option, Page, Poptip, Select, Tag } from 'view-ui-plus'
+import { Badge, Button, Input, Option, Page, Poptip, Select, Tag, Alert } from 'view-ui-plus'
 import { onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -109,7 +109,7 @@ onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children status-wrap">
+  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
     <Alert type="info" show-icon>
       {{ t('oj.contest_status_hidden') }}
     </Alert>
