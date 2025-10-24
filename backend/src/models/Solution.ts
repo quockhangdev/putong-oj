@@ -55,7 +55,7 @@ const solutionSchema = new mongoose.Schema({
     index: true,
     required: true,
   },
-  mid: { // mid 指代 contest id (历史遗留问题)
+  mid: { // mid refers to contest id (legacy issue)
     type: Number,
     default: -1,
     immutable: true,
