@@ -63,7 +63,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Form label-position="right" :label-width="120">
+  <Form label-position="right" :label-width="150">
     <FormItem>
       <template #label>
         <span style="line-height: 20px;">{{ t('oj.contest_title') }}</span>

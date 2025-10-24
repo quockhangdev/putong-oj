@@ -90,7 +90,7 @@ onMounted(async () => {
   <div v-if="contest" class="conadd-wrap">
     <ContestBasicEdit :contest-id="contest.cid" />
     <!-- Labeling Style -->
-    <Form :label-width="120">
+    <Form :label-width="150">
       <FormItem :label="t('oj.labeling_style')">
         <Select v-model="contest.option.labelingStyle" class="contest-form-item">
           <Option :value="contestLabelingStyle.numeric">
