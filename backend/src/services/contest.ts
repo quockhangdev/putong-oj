@@ -144,7 +144,7 @@ export async function getRanklist (
       // If Partially Accepted, update the maximum passed testcases percentage
       const passedTestcases = testcases?.filter(tc => tc.judge === judge.Accepted).length || 0
       const totalTestcases = testcases?.length || 1
-      const passedPercentage = Math.floor((passedTestcases / totalTestcases) * 100)
+      const passedPercentage = (passedTestcases / totalTestcases) * 100
       if (passedPercentage > 0 && passedPercentage > (item?.partial || 0)) {
         item.partial = passedPercentage
       }
