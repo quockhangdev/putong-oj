@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Message } from 'view-ui-plus'
-import { contestLabelingStyle } from '@backend/utils/constants'
+import { contestLabelingStyle, contestType, contestRanklistVisibility } from '@backend/utils/constants'
 import { storeToRefs } from 'pinia'
 import { Button, Divider, Form, FormItem, Input, Option, Select, Spin } from 'view-ui-plus'
 import { computed, inject, onMounted, ref } from 'vue'
@@ -70,10 +70,17 @@ onMounted(async () => {
   if (!contest.value.option) {
     contest.value.option = {
       labelingStyle: contestLabelingStyle.numeric,
+      ranklistVisibility: contestRanklistVisibility.Always,
     }
   }
   if (!contest.value.option.labelingStyle) {
     contest.value.option.labelingStyle = contestLabelingStyle.numeric
+  }
+  if (!contest.value.type) {
+    contest.value.type = contestType.ICPC
+  }
+  if (!contest.value.option.ranklistVisibility) {
+    contest.value.option.ranklistVisibility = contestRanklistVisibility.Always
   }
 })
 </script>
@@ -81,6 +88,7 @@ onMounted(async () => {
 <template>
   <div v-if="contest" class="conadd-wrap">
     <ContestBasicEdit :contest-id="contest.cid" />
+    <!-- Labeling Style -->
     <Form :label-width="120">
       <FormItem :label="t('oj.labeling_style')">
         <Select v-model="contest.option.labelingStyle" class="contest-form-item">
@@ -90,6 +98,25 @@ onMounted(async () => {
           <Option :value="contestLabelingStyle.alphabetic">
             {{ t('oj.alphabetic') }}
           </Option>
+        </Select>
+      </FormItem>
+      <!-- Contest Type -->
+      <FormItem :label="t('oj.contest_type')">
+        <Select v-model="contest.type" class="contest-form-item">
+          <Option :value="contestType.ICPC">
+            ICPC
+          </Option>
+          <Option :value="contestType.OI">
+            OI
+          </Option>
+        </Select>
+      </FormItem>
+      <!-- Ranklist Visibility -->
+      <FormItem :label="t('oj.ranklist_visibility')">
+        <Select v-model="contest.option.ranklistVisibility" class="contest-form-item">
+          <Option :value="contestRanklistVisibility.Always">Always</Option>
+          <Option :value="contestRanklistVisibility.AfterEnd">After End</Option>
+          <Option :value="contestRanklistVisibility.Never">Never</Option>
         </Select>
       </FormItem>
       <FormItem>

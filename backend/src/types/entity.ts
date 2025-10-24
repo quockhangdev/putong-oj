@@ -153,18 +153,20 @@ export interface ContestEntity extends Entity {
   argument: string
   option: ContestOption
   course: CourseDocument | null
+  type: number
+  ranklistVisibility: number
 }
 
 export type ContestEntityEditable = Pick<ContestEntity,
-  'title' | 'start' | 'end' | 'list' | 'status' | 'encrypt' | 'argument' | 'option'
+  'title' | 'start' | 'end' | 'list' | 'status' | 'encrypt' | 'argument' | 'option' | 'type'
 > & { course?: ObjectId | null }
 
 export type ContestEntityPreview = Pick<ContestEntity,
-  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt'
+  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt' | 'type'
 >
 
 export type ContestEntityView = Pick<ContestEntity,
-  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt' | 'list' | 'option'
+  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt' | 'list' | 'option' | 'type'
 > & Partial<Pick<ContestEntity, 'argument'>> & {
   course: CourseEntityPreviewWithRole | null
 }

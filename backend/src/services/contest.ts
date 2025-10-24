@@ -103,7 +103,7 @@ export async function getRanklist (
   solutions.forEach((solution: SolutionEntity) => {
     const { pid, uid, judge: judgement, createdAt } = solution
     if (judgement === judge.CompileError || judgement === judge.SystemError || judgement === judge.Skipped) {
-      // 如果是 Compile Error / System Error /  Skipped 视为不计入任何结果
+      // If it's Compile Error / System Error / Skipped, treat it as not counted in any results
       return
     }
 
@@ -113,8 +113,8 @@ export async function getRanklist (
     }
     if (!ranklist[uid][pid]) {
       ranklist[uid][pid] = {
-        failed: 0, // 错误提交的计数
-        pending: 0, // 无结果的提交计数
+        failed: 0, // number of failed submissions
+        pending: 0, // number of submissions without a result
       }
     }
 
@@ -122,24 +122,24 @@ export async function getRanklist (
     const item = ranklist[uid][pid]
 
     if (item.acceptedAt) {
-      // 已经有正确提交了则不需要再更新了
+      // If there's already an accepted submission, no further updates are needed
       return
     }
     if (isFrozen && createdTimestamp >= freezeTime) {
-      // 封榜时间内的提交视为无结果
+      // Submissions during the freeze period are treated as having no result
       item.pending += 1
       return
     }
     if (judgement === judge.Pending || judgement === judge.RejudgePending || judgement === judge.Running) {
-      // 如果是 Pending / Running 视为无结果
+      // If Pending / Running, treat as having no result
       item.pending += 1
       return
     }
     if (judgement === judge.Accepted) {
-      // 如果是 Accepted 视为正确提交
+      // If Accepted, treat it as an accepted submission
       item.acceptedAt = createdTimestamp
     } else {
-      // 否则视为错误提交
+      // Otherwise treat it as a failed submission
       item.failed += 1
     }
   })

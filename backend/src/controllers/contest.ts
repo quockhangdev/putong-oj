@@ -273,7 +273,7 @@ const getRanklist = async (ctx: Context) => {
     return false
   })()
 
-  // 封榜时长：20% 的比赛时间（最小 10 分钟）
+  // Freeze duration: 20% of the contest duration (minimum 10 minutes)
   const FREEZE_DURATION_RATE = 0.2
   const MIN_FREEZE_DURATION = 10 * 60 * 1000
 

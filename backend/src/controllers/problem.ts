@@ -82,7 +82,7 @@ const findProblems = async (ctx: Context) => {
   const profile = ctx.state.profile
   const showReserved: boolean = !!profile?.isAdmin
 
-  /** @todo [ TO BE DEPRECATED ] 要有专门的 Endpoint 来获取所有题目 */
+  /** @todo [ TO BE DEPRECATED ] There should be a dedicated endpoint to retrieve all problems */
   if (Number(opt.page) === -1 && profile?.isAdmin) {
     const docs = await problemService.getProblemItems()
     ctx.body = { list: { docs, total: docs.length }, solved: [] }

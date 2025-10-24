@@ -48,6 +48,17 @@ export const problemType = Object.freeze({
   SpecialJudge: 3,
 })
 
+export const contestType = Object.freeze({
+  ICPC: 1000,
+  OI: 2000,
+})
+
+export const contestRanklistVisibility = Object.freeze({
+  Always: 1111,
+  AfterEnd: 2222,
+  Never: 3333,
+})
+
 export const deploy = Object.freeze({
   adminInitPwd: 'kplkplkpl',
 })
@@ -103,4 +114,6 @@ export default Object.freeze({
   courseRoleEntire,
   contestLabelingStyle,
   tagColors,
+  contestType,
+  contestRanklistVisibility,
 })
