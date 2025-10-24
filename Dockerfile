@@ -53,6 +53,7 @@ COPY backend/entrypoint.sh .
 RUN mkdir -p /app/data /app/logs /app/public/uploads
 
 EXPOSE 3000/tcp
+EXPOSE 3001/tcp
 VOLUME [ "/app/data", "/app/logs", "/app/public/uploads" ]
 
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
