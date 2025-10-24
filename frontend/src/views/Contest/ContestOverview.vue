@@ -16,11 +16,12 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
 <template>
   <div class="contest-children problem-list-wrap">
     <div class="problem-list-header">
-      <h2 class="font-bold text-2xl">
+      <h2 class="text-2xl font-bold">
         {{ contest.title }}
       </h2>
       <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
       <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
+      <h4>Contest Type:&nbsp;&nbsp;{{ contest.type }}</h4>
     </div>
     <div class="problem-table-container">
       <table class="problem-table">

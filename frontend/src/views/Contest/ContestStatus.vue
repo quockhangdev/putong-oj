@@ -108,7 +108,12 @@ onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div class="contest-children status-wrap">
+  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children status-wrap">
+    <Alert type="info" show-icon>
+      {{ t('oj.contest_status_hidden') }}
+    </Alert>
+  </div>
+  <div v-else class="contest-children status-wrap">
     <div class="status-header">
       <Page class="status-page-table" :model-value="page" :total="sum" :page-size="pageSize" @on-change="pageChange" />
       <Page
