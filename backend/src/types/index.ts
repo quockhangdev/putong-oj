@@ -1,4 +1,4 @@
-import type { contestLabelingStyle, contestRanklistVisibility } from '../utils/constants'
+import type { contestLabelingStyle, contestRanklistVisibility, contestType } from '../utils/constants'
 
 export interface CourseRole {
   basic: boolean
@@ -12,6 +12,7 @@ export interface CourseRole {
 export interface ContestOption {
   labelingStyle: typeof contestLabelingStyle[keyof typeof contestLabelingStyle]
   ranklistVisibility: typeof contestRanklistVisibility[keyof typeof contestRanklistVisibility]
+  type: typeof contestType[keyof typeof contestType]
 }
 
 export interface SessionProfile {

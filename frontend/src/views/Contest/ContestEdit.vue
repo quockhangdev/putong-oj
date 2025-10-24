@@ -71,16 +71,17 @@ onMounted(async () => {
     contest.value.option = {
       labelingStyle: contestLabelingStyle.numeric,
       ranklistVisibility: contestRanklistVisibility.Always,
+      type: contestType.ICPC,
     }
   }
   if (!contest.value.option.labelingStyle) {
     contest.value.option.labelingStyle = contestLabelingStyle.numeric
   }
-  if (!contest.value.type) {
-    contest.value.type = contestType.ICPC
-  }
   if (!contest.value.option.ranklistVisibility) {
     contest.value.option.ranklistVisibility = contestRanklistVisibility.Always
+  }
+  if (!contest.value.option.type) {
+    contest.value.option.type = contestType.ICPC
   }
 })
 </script>
@@ -102,13 +103,9 @@ onMounted(async () => {
       </FormItem>
       <!-- Contest Type -->
       <FormItem :label="t('oj.contest_type')">
-        <Select v-model="contest.type" class="contest-form-item">
-          <Option :value="contestType.ICPC">
-            ICPC
-          </Option>
-          <Option :value="contestType.OI">
-            OI
-          </Option>
+        <Select v-model="contest.option.type" class="contest-form-item">
+          <Option :value="contestType.ICPC">ICPC</Option>
+          <Option :value="contestType.OI">OI</Option>
         </Select>
       </FormItem>
       <!-- Ranklist Visibility -->

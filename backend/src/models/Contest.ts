@@ -25,6 +25,11 @@ const contestOptionSchema = new mongoose.Schema({
     enum: Object.values(constants.contestRanklistVisibility),
     default: constants.contestRanklistVisibility.Always,
   },
+  type: {
+    type: Number,
+    enum: Object.values(constants.contestType),
+    default: constants.contestType.ICPC,
+  },
 }, {
   _id: false,
 })
@@ -86,11 +91,6 @@ const contestSchema = new mongoose.Schema({
     type: Number,
     enum: Object.values(constants.encrypt),
     default: constants.encrypt.Public,
-  },
-  type: {
-    type: Number,
-    enum: Object.values(constants.contestType),
-    default: constants.contestType.ICPC,
   },
   argument: {
     type: String,
