@@ -152,8 +152,11 @@ onBeforeUnmount(clearAutoRefresh)
             <td class="table-nick">
               {{ item.nick }}
             </td>
-            <td class="table-solve">
+            <td v-if="contest.option.type === contestType.ICPC" class="table-solve">
               {{ item.solved }}
+            </td>
+            <td v-if="contest.option.type === contestType.OI" class="table-solve">
+              {{ item.solved.toFixed(2) }}
             </td>
             <td class="table-penalty">
               {{ item.penalty }}
