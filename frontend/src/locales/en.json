@@ -126,5 +126,7 @@
   "username_already_taken": "Username already taken, please choose another one",
   "username_invalid": "Invalid username",
   "username_invalid_detail": "Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, and hyphens",
-  "welcome_back": "Welcome back, {username}!"
+  "welcome_back": "Welcome back, {username}!",
+  "contest_type": "Contest Type",
+  "ranklist_visibility": "Ranklist Visibility"
 }
