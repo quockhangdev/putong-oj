@@ -7,6 +7,7 @@ import ID from './ID'
 
 export interface SolutionDocument extends Document, SolutionEntity {
   isAccepted: boolean
+  isPartiallyAccepted: boolean
   isPending: boolean
 }
 
@@ -143,6 +144,9 @@ solutionSchema.plugin(mongoosePaginate)
 
 solutionSchema.virtual('isAccepted').get(function () {
   return this.judge === judge.Accepted
+})
+solutionSchema.virtual('isPartiallyAccepted').get(function () {
+  return this.judge === judge.PartiallyAccepted
 })
 solutionSchema.virtual('isPending').get(function () {
   return this.judge === judge.Pending

@@ -21,6 +21,7 @@ export const judge = Object.freeze({
   SystemError: 10,
   RejudgePending: 11,
   Skipped: 12,
+  PartiallyAccepted: 13,
 })
 
 export const judgeResult = judge

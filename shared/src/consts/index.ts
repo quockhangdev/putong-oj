@@ -48,6 +48,7 @@ export enum JudgeStatus {
   SystemError = 10,
   RejudgePending = 11,
   Skipped = 12,
+  PartiallyAccepted = 13,
 }
 
 export enum Language {
@@ -56,4 +57,6 @@ export enum Language {
   Java = 3,
   Python = 4,
   Cpp17 = 5,
+  Cpp20 = 6,
+  Cpp23 = 7,
 }

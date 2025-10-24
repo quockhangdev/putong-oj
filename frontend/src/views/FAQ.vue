@@ -244,6 +244,16 @@ else:
               <td><code>g++ Main.cpp -o Main -std=c++17 -O2 -lm -DONLINE_JUDGE -w --static</code></td>
             </tr>
             <tr>
+              <td><b>C++ 20</b></td>
+              <td>g++ 12.2.0</td>
+              <td><code>g++ Main.cpp -o Main -std=c++20 -O2 -lm -DONLINE_JUDGE -w --static</code></td>
+            </tr>
+            <tr>
+              <td><b>C++ 23</b></td>
+              <td>g++ 12.2.0</td>
+              <td><code>g++ Main.cpp -o Main -std=c++23 -O2 -lm -DONLINE_JUDGE -w --static</code></td>
+            </tr>
+            <tr>
               <td><b>Java</b></td>
               <td>openjdk &amp; javac 17.0.14</td>
               <td>

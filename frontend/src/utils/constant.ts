@@ -7,6 +7,8 @@ export const languageHighlight = {
   3: 'java',
   4: 'python',
   5: 'cpp',
+  6: 'cpp',
+  7: 'cpp',
 } as const
 
 export const color = {
@@ -95,6 +97,7 @@ export const judgeStatusLabels: Record<JudgeStatus, string> = {
   [JudgeStatus.SystemError]: 'System Error',
   [JudgeStatus.RejudgePending]: 'Rejudge Pending',
   [JudgeStatus.Skipped]: 'Skipped',
+  [JudgeStatus.PartiallyAccepted]: 'Partially Accepted',
 } as const
 
 export const judgeStatusOptions = Object.entries(judgeStatusLabels)
@@ -111,6 +114,8 @@ export const languageLabels: Record<Language, string> = {
   [Language.Cpp17]: 'C++ 17',
   [Language.Java]: 'Java',
   [Language.Python]: 'Python 3',
+  [Language.Cpp20]: 'C++ 20',
+  [Language.Cpp23]: 'C++ 23',
 }
 
 export const languageOptions = Object.entries(languageLabels)
