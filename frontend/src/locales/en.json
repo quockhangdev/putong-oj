@@ -7,6 +7,7 @@
   "back_to_login": "Back to Login",
   "basic_information": "Basic Information",
   "cancel": "Cancel",
+  "ok": "OK",
   "change_password": "Change Password",
   "change_password_admin_desc": "Change the user's password. This will immediately invalidate the current password and all active sessions.",
   "change_password_desc": "Change your password. This will log you out from all outher active sessions.",
