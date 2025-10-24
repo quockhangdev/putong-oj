@@ -11,6 +11,7 @@ import { useContestStore } from '@/store/modules/contest'
 import { useSessionStore } from '@/store/modules/session'
 import { contestLabeling, timePretty } from '@/utils/formate'
 import { exportSheet, normalize } from '@/utils/ranklist'
+import { contestRanklistVisibility } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const contestStore = useContestStore()
@@ -72,7 +73,12 @@ onBeforeUnmount(clearAutoRefresh)
 </script>
 
 <template>
-  <div class="contest-children">
+  <div v-if="contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="contest-children">
+    <Alert type="info" show-icon>
+      {{ t('oj.ranklist_hidden') }}
+    </Alert>
+  </div>
+  <div v-else class="contest-children">
     <div class="board-header">
       <Space>
         <Button size="small" shape="circle" type="primary" :loading="loading" icon="md-refresh" @click="getRanklist" />
