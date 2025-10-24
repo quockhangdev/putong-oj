@@ -127,14 +127,14 @@ export function thousandSeparator (num: number | string): string {
 export function getJudgeStatusClassname (judgeStatus: JudgeStatus) {
   switch (judgeStatus) {
     case JudgeStatus.Accepted:
-      return 'text-red-500'
+      return 'text-green-500'
     case JudgeStatus.WrongAnswer:
     case JudgeStatus.RuntimeError:
     case JudgeStatus.TimeLimitExceeded:
     case JudgeStatus.MemoryLimitExceeded:
     case JudgeStatus.OutputLimitExceeded:
     case JudgeStatus.SystemError:
-      return 'text-green-500'
+      return 'text-red-500'
     case JudgeStatus.CompileError:
       return 'text-violet-600'
     case JudgeStatus.PresentationError:
