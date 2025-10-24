@@ -3,10 +3,12 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useContestStore } from '@/store/modules/contest'
+import { useSessionStore } from '@/store/modules/session'
 import { contestLabeling, formate, timePretty } from '@/utils/formate'
 import { contestType, contestRanklistVisibility } from '@backend/utils/constants'
 
 const { t } = useI18n()
+const sessionStore = useSessionStore()
 const contestStore = useContestStore()
 const { contest, overview, solved } = $(storeToRefs(contestStore))
 const { isAdmin } = $(storeToRefs(sessionStore))
