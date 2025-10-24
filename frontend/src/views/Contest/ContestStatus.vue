@@ -12,7 +12,7 @@ import { useSolutionStore } from '@/store/modules/solution'
 import constant from '@/utils/constant'
 import { contestLabeling, similarityColor, timePretty } from '@/utils/formate'
 import { onRouteQueryUpdate, purify } from '@/utils/helper'
-import { contestRanklistVisibility } from '@backend/utils/constants'
+import { contestRanklistVisibility, judgeResult } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const sessionStore = useSessionStore()
@@ -97,6 +97,12 @@ function search () {
 }
 
 const pageChange = val => reload({ page: val })
+
+const getActuallyStatus = (judge) => {
+  if (contest.option.type === constant.contestType.ICPC && judge === judgeResult.PartiallyAccepted)
+    return 5 // Hide 'Partially Accepted' in ICPC contests, treat it as 'Wrong Answer'
+  return judge
+}
 
 onBeforeMount(async () => {
   loading = true
@@ -184,7 +190,7 @@ onRouteQueryUpdate(fetch)
             </td>
           </tr>
           <tr v-for="item in list" :key="item.sid">
-            <td v-if="isAdmin || (profile && profile.uid === item.uid)" class="status-sid">
+            <td v-if="isAdmin || (profile && profile.uid === item.uid && contest.option.type !== contestType.ICPC)" class="status-sid">
               <router-link :to="{ name: 'solution', params: { sid: item.sid } }">
                 {{ item.sid }}
               </router-link>
@@ -203,7 +209,7 @@ onRouteQueryUpdate(fetch)
               </router-link>
             </td>
             <td class="status-judge">
-              <span :class="color[item.judge]">{{ result[item.judge] }}</span>
+              <span :class="color[getActuallyStatus(item.judge)]">{{ result[getActuallyStatus(item.judge)] }}</span>
               <Poptip
                 v-if="item.sim" trigger="hover" word-wrap width="220"
                 :content="t('oj.similar_submission', { similar: item.sim_s_id, similarity: item.sim })"
