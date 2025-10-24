@@ -112,7 +112,7 @@ onMounted(async () => {
       <FormItem :label="t('oj.ranklist_visibility')">
         <Select v-model="contest.option.ranklistVisibility" class="contest-form-item">
           <Option :value="contestRanklistVisibility.Always">Always</Option>
-          <Option :value="contestRanklistVisibility.AfterEnd">After End</Option>
+          <!-- <Option :value="contestRanklistVisibility.AfterEnd">After End</Option> -->
           <Option :value="contestRanklistVisibility.Never">Never</Option>
         </Select>
       </FormItem>

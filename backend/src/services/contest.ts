@@ -7,7 +7,7 @@ import { escapeRegExp } from 'lodash'
 import Contest from '../models/Contest'
 import Solution from '../models/Solution'
 import User from '../models/User'
-import { judge, status } from '../utils/constants'
+import { contestType, judge, status } from '../utils/constants'
 
 export async function findContests (
   opt: PaginateOption & {
@@ -100,6 +100,8 @@ export async function getRanklist (
     .sort({ create: 1 })
     .lean()
 
+  const contest = await getContest(cid)
+
   solutions.forEach((solution: SolutionEntity) => {
     const { pid, uid, judge: judgement, createdAt, testcases } = solution
     if (judgement === judge.CompileError || judgement === judge.SystemError || judgement === judge.Skipped) {
@@ -138,7 +140,7 @@ export async function getRanklist (
     if (judgement === judge.Accepted) {
       // If Accepted, treat it as an accepted submission
       item.acceptedAt = createdTimestamp
-    } else if (judgement === judge.PartiallyAccepted) {
+    } else if (contest?.option.type === contestType.OI && judgement === judge.PartiallyAccepted) {
       // If Partially Accepted, update the maximum passed testcases percentage
       const passedTestcases = testcases?.filter(tc => tc.judge === judge.Accepted).length || 0
       const totalTestcases = testcases?.length || 1
@@ -146,6 +148,8 @@ export async function getRanklist (
       if (passedPercentage > 0 && passedPercentage > (item?.partial || 0)) {
         item.partial = passedPercentage
       }
+      // Also treat it as a failed submission
+      item.failed += 1
     } else {
       // Otherwise treat it as a failed submission
       item.failed += 1

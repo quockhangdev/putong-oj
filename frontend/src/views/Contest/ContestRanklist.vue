@@ -167,7 +167,12 @@ onBeforeUnmount(clearAutoRefresh)
                 <router-link
                   :to="{ name: 'contestStatus', params: { cid }, query: { uid: item.uid, pid: pindex + 1 } }"
                 >
-                  <span class="cell-accept">{{ item[pid].failed > 0 ? `+${item[pid].failed}` : '+' }}</span>
+                  <span v-if="contest.option.type === contestType.ICPC" class="cell-accept">
+                    {{ item[pid].failed > 0 ? `+${item[pid].failed}` : '+' }}
+                  </span>
+                  <span v-if="contest.option.type === contestType.OI && item[pid]?.partial" class="cell-accept">
+                    {{ item[pid].partial > 0 ? `100 (+${item[pid].failed})` : '100' }}
+                  </span>
                   <span class="cell-time">
                     {{ formateAcceptedAt(item[pid].acceptedAt - contest.start) }}
                   </span>
@@ -178,8 +183,11 @@ onBeforeUnmount(clearAutoRefresh)
                   :to="{ name: 'contestStatus', params: { cid }, query: { uid: item.uid, pid: pindex + 1 } }"
                 >
                   <Space>
-                    <span v-if="item[pid].failed" class="cell-failed">-{{ item[pid].failed }}</span>
-                    <span v-if="item[pid].pending" class="cell-pending">+{{ item[pid].pending }}</span>
+                    <span v-if="contest.option.type === contestType.OI && item[pid].partial" class="cell-failed">
+                      {{ item[pid].partial.toFixed(2) }}
+                    </span>
+                    <span v-if="contest.option.type === contestType.ICPC && item[pid].failed" class="cell-failed">-{{ item[pid].failed }}</span>
+                    <span v-if="contest.option.type === contestType.ICPC && item[pid].pending" class="cell-pending">+{{ item[pid].pending }}</span>
                   </Space>
                 </router-link>
               </td>
