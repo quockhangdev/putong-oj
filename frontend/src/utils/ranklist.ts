@@ -2,6 +2,7 @@ import type { ContestEntityView } from '@backend/types/entity'
 import type { Cell } from 'exceljs'
 import type { Ranklist, RawRanklist } from '@/types'
 import { contestLabeling } from './formate'
+import { contestType } from '@backend/utils/constants'
 
 const PENALTY = 20 // Penalty for failed submissions: 20 minutes
 
@@ -17,11 +18,14 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
       if (row[pid] == null) continue // No submissions for this problem
       const submission = row[pid]
       if (submission.acceptedAt) {
-        solved++
+        if (contest.option.type === contestType.ICPC) {
+          solved++ // For ICPC, count number of problems solved
+        } else {
+          solved += 100 // For OI, count as 100 points
+        }
         penalty += Math.max(0, Math.floor((submission.acceptedAt - contest.start) / 1000 / 60))
         penalty += submission.failed * PENALTY
-      }
-      if (submission.partial) {
+      } else if (contest.option.type === contestType.OI && submission.partial) {
         partial++
       }
     }
