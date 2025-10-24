@@ -243,7 +243,7 @@ onMounted(fetch)
               </div>
             </div>
             <Button
-              :label="connections.CJLU ? t('ptoj.connected') : t('ptoj.connect')" :disabled="!!connections.CJLU"
+              :label="connections.CJLU ? t('ptoj.connected') : t('ptoj.connect')" :disabled="true"
               @click="connectOAuth('cjlu')"
             />
           </div>

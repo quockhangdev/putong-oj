@@ -28,7 +28,7 @@ export const judgeResult = judge
 
 export const limitation = Object.freeze({
   time: 10 * 1000,
-  memory: 256 * 1024,
+  memory: 512 * 1024,
 })
 
 export const status = Object.freeze({
