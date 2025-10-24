@@ -29,7 +29,7 @@ function onCopy (content: string) {
     <h5>
       <Space split>
         <span>Time Limit: {{ problem.time }}ms</span>
-        <span>Memory Limit: {{ problem.memory }}KB</span>
+        <span>Memory Limit: {{ problem.memory }} KB</span>
       </Space>
     </h5>
     <h2 class="font-semibold">
