@@ -3,17 +3,17 @@ import type { Cell } from 'exceljs'
 import type { Ranklist, RawRanklist } from '@/types'
 import { contestLabeling } from './formate'
 
-const PENALTY = 20 // 失败提交罚时 20 分钟
+const PENALTY = 20 // Penalty for failed submissions: 20 minutes
 
 export function normalize (ranklist: RawRanklist, contest: ContestEntityView): Ranklist {
-  const list: Ranklist = [] // 结果
+  const list: Ranklist = [] // Result
 
   Object.keys(ranklist).forEach((uid) => {
     const row = ranklist[uid]
-    let solved = 0 // 记录 AC 几道题
-    let penalty = 0 // 罚时（分钟），仅在 AC 时计算
+  let solved = 0 // Number of problems accepted
+  let penalty = 0 // Penalty time (minutes), only counted when AC
     for (const pid of contest.list) {
-      if (row[pid] == null) continue // 这道题没有交过
+  if (row[pid] == null) continue // No submissions for this problem
       const submission = row[pid]
       if (submission.acceptedAt) {
         solved++
@@ -22,7 +22,7 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
       }
     }
     list.push({
-      rank: -1, // 先占位，后面会重新计算排名
+  rank: -1, // Placeholder rank; will be recalculated later
       uid,
       solved,
       penalty,
@@ -30,7 +30,7 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
     })
   })
 
-  // 排序, 先按照 solved 降序，再按照 penalty 升序，最后按照 uid 升序
+  // Sort: solved desc, then penalty asc, then uid asc
   list.sort((x, y) => {
     if (x.solved !== y.solved) {
       return y.solved - x.solved
@@ -41,7 +41,7 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
     return x.uid.localeCompare(y.uid)
   })
 
-  // 重新计算排名
+  // Recalculate ranks
   let currentRank = 0
   let calculated = 0
   let lastSolved = -1
@@ -56,8 +56,8 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
     row.rank = currentRank
   })
 
-  // 接下来计算每道题的最早提交
-  const quickest: Record<number, number> = {} // 每到题最早提交的 AC 时间
+  // Now compute earliest accepted time for each problem
+  const quickest: Record<number, number> = {} // Earliest accepted time per problem
   for (const pid of contest.list) {
     quickest[pid] = Number.POSITIVE_INFINITY
   }
@@ -76,8 +76,8 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
   list.forEach((row) => {
     for (const pid of contest.list) {
       if (!row[pid]?.acceptedAt) continue
-      if (quickest[pid] === row[pid].acceptedAt) { // 这就是最早提交的那个
-        row[pid].isPrime = true // 打上标记
+      if (quickest[pid] === row[pid].acceptedAt) { // This is the earliest accepted submission
+        row[pid].isPrime = true // Mark it
       }
     }
   })

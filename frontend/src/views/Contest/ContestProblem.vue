@@ -55,7 +55,7 @@ onRouteParamUpdate(fetch)
           {{ $route.params.id }}: {{ problem.title }}
         </template>
       </Problem>
-      <Button class="problem-submit" shape="circle" icon="md-paper-plane" @click="submit">
+      <Button style="margin-top: 10px;" class="problem-submit" shape="circle" icon="md-paper-plane" @click="submit">
         {{ t('oj.submit') }}
       </Button>
     </div>
