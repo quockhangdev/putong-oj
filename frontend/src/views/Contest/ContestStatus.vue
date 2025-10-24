@@ -190,7 +190,7 @@ onRouteQueryUpdate(fetch)
             </td>
           </tr>
           <tr v-for="item in list" :key="item.sid">
-            <td v-if="isAdmin || (profile && profile.uid === item.uid && contest.option.type !== contestType.ICPC)" class="status-sid">
+            <td v-if="isAdmin || (profile && profile.uid === item.uid && contest.option.type !== constant.contestType.ICPC)" class="status-sid">
               <router-link :to="{ name: 'solution', params: { sid: item.sid } }">
                 {{ item.sid }}
               </router-link>
