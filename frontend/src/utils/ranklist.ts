@@ -22,7 +22,7 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
       }
     }
     list.push({
-  rank: -1, // Placeholder rank; will be recalculated later
+      rank: -1, // Placeholder rank; will be recalculated later
       uid,
       solved,
       penalty,

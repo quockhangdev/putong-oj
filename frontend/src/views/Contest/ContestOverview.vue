@@ -4,11 +4,12 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useContestStore } from '@/store/modules/contest'
 import { contestLabeling, formate, timePretty } from '@/utils/formate'
-import { contestType } from '@backend/utils/constants'
+import { contestType, contestRanklistVisibility } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const contestStore = useContestStore()
 const { contest, overview, solved } = $(storeToRefs(contestStore))
+const { isAdmin } = $(storeToRefs(sessionStore))
 
 const route = useRoute()
 const cid = $computed(() => Number.parseInt(route.params.cid || 1))
@@ -65,10 +66,16 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
               </router-link>
               <span v-else>{{ t('oj.problem_invalid') }}</span>
             </td>
-            <td class="problem-ratio">
+            <td v-if="!isAdmin && contest.option?.ranklistVisibility === contestRanklistVisibility.Never" class="problem-ratio">
+              <span>-</span>
+            </td>
+            <td v-else class="problem-ratio">
               <span v-if="!item.invalid">
                 {{ formate(item.solve / (item.submit + 0.000001)) }}
                 ({{ item.solve }} / {{ item.submit }})
+              </span>
+              <span v-else>
+                -
               </span>
             </td>
           </tr>
