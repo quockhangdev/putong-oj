@@ -12,6 +12,7 @@ import { useSolutionStore } from '@/store/modules/solution'
 import constant from '@/utils/constant'
 import { contestLabeling, similarityColor, timePretty } from '@/utils/formate'
 import { onRouteQueryUpdate, purify } from '@/utils/helper'
+import { contestRanklistVisibility } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const sessionStore = useSessionStore()

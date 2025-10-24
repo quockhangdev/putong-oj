@@ -21,7 +21,7 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
       </h2>
       <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
       <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
-      <h4>Contest Type:&nbsp;&nbsp;{{ contest.type }}</h4>
+      <h4>Contest Type:&nbsp;&nbsp;{{ contest.option.type }}</h4>
     </div>
     <div class="problem-table-container">
       <table class="problem-table">
