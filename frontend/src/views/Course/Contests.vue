@@ -92,6 +92,8 @@ async function visit (item) {
       onOk: () => {
         enter(item)
       },
+      okText: t('oj.ok'),
+      cancelText: t('oj.cancel'),
     })
   }
 }

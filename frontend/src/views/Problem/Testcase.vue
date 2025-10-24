@@ -64,6 +64,8 @@ function del (item) {
     onCancel: () => {
       message.info(t('oj.testcase_delete_cancel'))
     },
+    okText: t('oj.ok'),
+    cancelText: t('oj.cancel'),
   })
 }
 
@@ -94,6 +96,8 @@ async function createCheck () {
     modal.confirm({
       title: t('oj.alert'),
       content: t('oj.testcase_error_incomplete'),
+      okText: t('oj.ok'),
+      cancelText: t('oj.cancel'),
       onOk: () => create(testcase),
       onCancel: () => message.info(t('oj.testcase_create_cancel')),
     })

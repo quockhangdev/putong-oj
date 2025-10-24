@@ -56,6 +56,8 @@ async function submitCheck () {
       $Modal.confirm({
         title: t('oj.notice'),
         content: t('oj.sample_input_output_incomplete'),
+        okText: t('oj.ok'),
+        cancelText: t('oj.cancel'),
         onOk: async () => {
           await submit()
         },

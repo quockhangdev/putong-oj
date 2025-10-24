@@ -42,6 +42,8 @@ function del (nid) {
       $Message.success(`Successfully deleted ${nid}!`)
       reload({ page: currentPage })
     },
+    okText: t('oj.ok'),
+    cancelText: t('oj.cancel'),
     onCancel: () => {
       $Message.info('Delete canceled.')
     },

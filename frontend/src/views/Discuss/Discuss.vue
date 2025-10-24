@@ -57,6 +57,8 @@ function del (did) {
     onCancel: () => {
       $Message.info('Deletion cancelled.')
     },
+    okText: t('oj.ok'),
+    cancelText: t('oj.cancel'),
   })
 }
 

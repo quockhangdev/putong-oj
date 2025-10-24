@@ -96,6 +96,8 @@ async function visit (item) {
       onOk: () => {
         enter(item)
       },
+      okText: t('oj.ok'),
+      cancelText: t('oj.cancel'),
     })
   }
 }
@@ -121,6 +123,8 @@ function del (cid) {
       loading = false
     },
     onCancel: () => $Message.info('Deletion canceled!'),
+    okText: t('oj.ok'),
+    cancelText: t('oj.cancel'),
   })
 }
 
