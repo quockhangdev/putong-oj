@@ -2,6 +2,7 @@ export * from './keywords.js'
 export * from './regex.js'
 
 export enum ErrorCode {
+  NetworkError = -1,
   OK = 200,
   BadRequest = 400,
   Unauthorized = 401,
@@ -59,4 +60,10 @@ export enum Language {
   Cpp17 = 5,
   Cpp20 = 6,
   Cpp23 = 7,
+}
+
+export enum ExportFormat {
+  JSON_UTF8 = 'json-utf8',
+  CSV_UTF8 = 'csv-utf8',
+  CSV_UTF8_BOM = 'csv-utf8-bom',
 }
