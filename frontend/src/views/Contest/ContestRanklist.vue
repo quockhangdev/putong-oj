@@ -11,7 +11,7 @@ import { useContestStore } from '@/store/modules/contest'
 import { useSessionStore } from '@/store/modules/session'
 import { contestLabeling, timePretty } from '@/utils/formate'
 import { exportSheet, normalize } from '@/utils/ranklist'
-import { contestRanklistVisibility } from '@backend/utils/constants'
+import { contestRanklistVisibility, contestType } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const contestStore = useContestStore()
@@ -115,10 +115,10 @@ onBeforeUnmount(clearAutoRefresh)
               Nick
             </th>
             <th class="table-solve">
-              Solve
+              {{ contest.option?.type === contestType.ICPC ? "Solved" : "Score" }}
             </th>
             <th class="table-penalty">
-              Penalty
+              {{ contest.option?.type === contestType.ICPC ? "Penalty" : "Time" }}
             </th>
             <th v-for="(item, index) in overview" :key="index" class="table-problem">
               <Poptip trigger="hover" placement="bottom">

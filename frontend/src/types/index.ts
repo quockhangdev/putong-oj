@@ -68,6 +68,7 @@ export interface RawRanklist {
       acceptedAt?: number
       failed: number
       pending: number
+      partial?: number
     }
   }
 }
@@ -90,6 +91,7 @@ export interface RanklistRow {
     failed: number
     pending: number
     isPrime?: boolean
+    partial?: number
   }
 }
 

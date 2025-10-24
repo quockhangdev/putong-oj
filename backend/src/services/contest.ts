@@ -95,13 +95,13 @@ export async function getRanklist (
   const solutions = await Solution
     .find(
       { mid: cid },
-      { _id: 0, pid: 1, uid: 1, judge: 1, createdAt: 1 },
+      { _id: 0, pid: 1, uid: 1, judge: 1, createdAt: 1, testcases: 1 },
     )
     .sort({ create: 1 })
     .lean()
 
   solutions.forEach((solution: SolutionEntity) => {
-    const { pid, uid, judge: judgement, createdAt } = solution
+    const { pid, uid, judge: judgement, createdAt, testcases } = solution
     if (judgement === judge.CompileError || judgement === judge.SystemError || judgement === judge.Skipped) {
       // If it's Compile Error / System Error / Skipped, treat it as not counted in any results
       return
@@ -138,6 +138,14 @@ export async function getRanklist (
     if (judgement === judge.Accepted) {
       // If Accepted, treat it as an accepted submission
       item.acceptedAt = createdTimestamp
+    } else if (judgement === judge.PartiallyAccepted) {
+      // If Partially Accepted, update the maximum passed testcases percentage
+      const passedTestcases = testcases?.filter(tc => tc.judge === judge.Accepted).length || 0
+      const totalTestcases = testcases?.length || 1
+      const passedPercentage = Math.floor((passedTestcases / totalTestcases) * 100)
+      if (passedPercentage > 0 && passedPercentage > (item?.partial || 0)) {
+        item.partial = passedPercentage
+      }
     } else {
       // Otherwise treat it as a failed submission
       item.failed += 1

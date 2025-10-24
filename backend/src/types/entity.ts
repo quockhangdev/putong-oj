@@ -177,6 +177,7 @@ export interface ContestRanklist {
     [pid: number]: {
       acceptedAt?: number
       failed: number
+      partial?: number
       pending: number
     }
   }

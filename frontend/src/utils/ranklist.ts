@@ -10,15 +10,19 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
 
   Object.keys(ranklist).forEach((uid) => {
     const row = ranklist[uid]
-  let solved = 0 // Number of problems accepted
-  let penalty = 0 // Penalty time (minutes), only counted when AC
+    let solved = 0 // Number of problems accepted
+    let partial = 0 // Number of problems partially solved
+    let penalty = 0 // Penalty time (minutes), only counted when AC
     for (const pid of contest.list) {
-  if (row[pid] == null) continue // No submissions for this problem
+      if (row[pid] == null) continue // No submissions for this problem
       const submission = row[pid]
       if (submission.acceptedAt) {
         solved++
         penalty += Math.max(0, Math.floor((submission.acceptedAt - contest.start) / 1000 / 60))
         penalty += submission.failed * PENALTY
+      }
+      if (submission.partial) {
+        partial++
       }
     }
     list.push({
