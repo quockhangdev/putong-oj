@@ -118,7 +118,7 @@ onBeforeUnmount(clearAutoRefresh)
               {{ contest.option?.type === contestType.ICPC ? "Solved" : "Score" }}
             </th>
             <th class="table-penalty">
-              {{ contest.option?.type === contestType.ICPC ? "Penalty" : "Time" }}
+              {{ contest.option?.type === contestType.ICPC ? "Penalty" : "Penalty" }}
             </th>
             <th v-for="(item, index) in overview" :key="index" class="table-problem">
               <Poptip trigger="hover" placement="bottom">
@@ -187,7 +187,7 @@ onBeforeUnmount(clearAutoRefresh)
                 >
                   <Space v-if="contest.option.type === contestType.OI">
                     <span v-if="item[pid].partial" class="cell-failed">
-                      {{ item[pid].failed > 0 ? item[pid].partial.toFixed(2) + ` (+${item[pid].failed})` : item[pid].partial.toFixed(2) }}
+                      {{ (item[pid].failed - 1) > 0 ? item[pid].partial.toFixed(2) + ` (+${item[pid].failed - 1})` : item[pid].partial.toFixed(2) }}
                     </span>
                     <span v-else-if="item[pid].failed" class="cell-failed">
                       -{{ item[pid].failed }}
