@@ -201,9 +201,14 @@ onRouteQueryUpdate(fetch)
             <td class="contest-title">
               <Button type="text" class="table-button" @click="visit(item)">
                 <span class="button-text">{{ item.title }}</span>
-                <Tag :color="item.option.type === CType.OI ? 'green' : 'blue'" class="contest-mark">
-                  <span class="pi pi-trophy"></span>&nbsp;{{ item.option.type }}
-                </Tag>
+                <Poptip
+                  trigger="hover"
+                  :content="`This contest is of type ${item.option.type}`" placement="top"
+                >
+                  <Tag :color="item.option.type === CType.OI ? 'green' : 'blue'" class="contest-mark">
+                    <span class="pi pi-trophy"></span>&nbsp;{{ item.option.type }}
+                  </Tag>
+                </Poptip>
                 <Poptip
                   v-show="item.status === status.Reserve" trigger="hover"
                   content="This item is reserved, no one could see this, except admin" placement="top"

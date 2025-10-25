@@ -48,7 +48,7 @@ export async function findContests (
     limit: pageSize,
     lean: true,
     leanWithId: false,
-    select: '-_id cid title start end encrypt status',
+    select: '-_id cid title start end encrypt status option',
   }) as any
   return result
 }
