@@ -1,0 +1,98 @@
+name: putong-oj-stack
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  redis_data:
+
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    networks: [internal]
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    networks: [internal]
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ptoj-app:
+    build:
+      context: ./putong-oj
+    image: ptoj-app:local
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PTOJ_MONGODB_URL: "mongodb://mongo:27017/putong"
+      PTOJ_REDIS_URL: "redis://redis:6379"
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    # giữ nguyên named volumes cho data/logs/uploads
+    volumes:
+      - ./putong-oj/backend/data:/app/data
+      - ./putong-oj/backend/logs:/app/logs
+      - ./putong-oj/backend/uploads:/app/public/uploads
+    networks: [internal]
+    restart: unless-stopped
+
+  ptoj-sandbox:
+    build:
+      context: ./putong-oj/ptoj-judger
+      dockerfile: Dockerfile.sandbox
+    image: ptoj-sandbox:local
+    privileged: true
+    networks: [internal]
+    volumes:
+      # mount đúng ./putong-oj/backend/data (read-only)
+      - ./putong-oj/backend/data:/app/data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "sleep 2"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ptoj-judger:
+    build:
+      context: ./putong-oj/ptoj-judger
+      dockerfile: Dockerfile.judger
+    image: ptoj-judger:local
+    depends_on:
+      redis:
+        condition: service_healthy
+      ptoj-sandbox:
+        condition: service_started
+    environment:
+      PTOJ_REDIS_URL: "redis://redis:6379"
+      PTOJ_SANDBOX_ENDPOINT: "http://ptoj-sandbox:5050"
+      PTOJ_INIT_CONCURRENT: "${PTOJ_INIT_CONCURRENT:-2}"
+      PTOJ_DEBUG: "${PTOJ_DEBUG:-0}"
+      PTOJ_LOG_FILE: "/logs/judger.log"
+    volumes:
+      - ./putong-oj/backend/logs:/logs
+      - ./putong-oj/backend/data:/app/data:rw
+    networks: [internal]
+    restart: unless-stopped
