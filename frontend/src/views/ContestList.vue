@@ -11,6 +11,7 @@ import { useSessionStore } from '@/store/modules/session'
 import { timePretty } from '@/utils/formate'
 import constant from '../utils/constant'
 import { onRouteQueryUpdate, purify } from '../utils/helper'
+import { contestType as CType } from '@backend/utils/constants'
 
 const { t } = useI18n()
 const { 'contestType': type, 'status': contestVisible } = constant
@@ -200,6 +201,9 @@ onRouteQueryUpdate(fetch)
             <td class="contest-title">
               <Button type="text" class="table-button" @click="visit(item)">
                 <span class="button-text">{{ item.title }}</span>
+                <Tag :color="item.option.type === CType.OI ? 'green' : 'blue'" class="contest-mark">
+                  <span class="pi pi-trophy"></span>&nbsp;{{ item.option.type }}
+                </Tag>
                 <Poptip
                   v-show="item.status === status.Reserve" trigger="hover"
                   content="This item is reserved, no one could see this, except admin" placement="top"

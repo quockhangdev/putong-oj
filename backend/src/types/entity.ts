@@ -160,7 +160,7 @@ export type ContestEntityEditable = Pick<ContestEntity,
 > & { course?: ObjectId | null }
 
 export type ContestEntityPreview = Pick<ContestEntity,
-  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt'
+  'cid' | 'title' | 'start' | 'end' | 'status' | 'encrypt' | 'option'
 >
 
 export type ContestEntityView = Pick<ContestEntity,
