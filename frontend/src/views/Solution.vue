@@ -62,7 +62,9 @@ function prettyCode (code) {
 async function fetch () {
   loading = true
   await findOne(route.params)
-  await contestStore.findOne({ cid: solution.mid })
+  if (solution.mid > 0) {
+    await contestStore.findOne({ cid: solution.mid })
+  }
   root.changeDomTitle({ title: `Solution ${solution.pid}` })
   loading = false
 }
