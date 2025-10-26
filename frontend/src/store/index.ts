@@ -36,6 +36,7 @@ export const useRootStore = defineStore('root', {
       SystemError: 10,
       RejudgePending: 11,
       Skipped: 12,
+      PartiallyAccepted: 13,
     },
   }),
   actions: {

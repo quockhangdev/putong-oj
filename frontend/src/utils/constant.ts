@@ -24,6 +24,8 @@ export const color = {
   9: 'pe',
   10: 'se',
   11: 'rp',
+  12: 'sk',
+  13: 'pa',
 } as const
 
 export const statisTableObj = [

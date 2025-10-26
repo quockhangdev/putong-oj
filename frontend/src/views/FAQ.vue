@@ -126,7 +126,7 @@ else:
             </td>
           </tr>
           <tr>
-            <td class="info">
+            <td class="pa info">
               <b>{{ isZH ? '部分通过' : 'PA' }}</b><br>Partially Accepted
             </td>
             <td v-if="isZH">

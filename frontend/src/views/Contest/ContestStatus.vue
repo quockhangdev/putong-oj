@@ -9,6 +9,7 @@ import { useRootStore } from '@/store'
 import { useContestStore } from '@/store/modules/contest'
 import { useSessionStore } from '@/store/modules/session'
 import { useSolutionStore } from '@/store/modules/solution'
+import emitter from '@/utils/emitter'
 import constant from '@/utils/constant'
 import { contestLabeling, similarityColor, timePretty } from '@/utils/formate'
 import { onRouteQueryUpdate, purify } from '@/utils/helper'
@@ -111,6 +112,13 @@ onBeforeMount(async () => {
   fetch()
   changeDomTitle({ title: `Contest ${route.params.cid}` })
 })
+
+emitter.on('submission-updated', (sid) => {
+  if (list.some(item => item.sid === sid)) {
+    fetch()
+  }
+})
+
 onRouteQueryUpdate(fetch)
 </script>
 
