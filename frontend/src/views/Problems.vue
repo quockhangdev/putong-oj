@@ -2,7 +2,7 @@
 import type { Message, Modal } from 'view-ui-plus'
 import type { FindProblemsParams } from '@/types/api'
 import { storeToRefs } from 'pinia'
-import { Button, Icon, Input, Option, Page, Select, Spin, Tag, Tooltip } from 'view-ui-plus'
+import { Button, Icon, Input, Option, Page, Select, Spin, Tag, Tooltip, Poptip } from 'view-ui-plus'
 import { inject, onBeforeMount, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -163,7 +163,15 @@ onProfileUpdate(fetch)
             <td class="problem-title">
               <router-link :to="{ name: 'problemInfo', params: { pid: item.pid } }">
                 <Button type="text" class="table-button">
-                  {{ item.title }}
+                  {{ item.title }}&nbsp;&nbsp;
+                  <Poptip
+                    v-show="item.status === status.Reserve" trigger="hover"
+                    :content="t('oj.reserved_item_notice')" placement="top"
+                  >
+                    <Tag style="margin-bottom: 5px;">
+                      {{ t('oj.reserved') }}
+                    </Tag>
+                  </Poptip>
                 </Button>
               </router-link>
             </td>

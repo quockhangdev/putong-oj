@@ -126,6 +126,17 @@ else:
             </td>
           </tr>
           <tr>
+            <td class="info">
+              <b>{{ isZH ? '部分通过' : 'PA' }}</b><br>Partially Accepted
+            </td>
+            <td v-if="isZH">
+              你的程序部分正确！
+            </td>
+            <td v-else>
+              Your program is partially correct!
+            </td>
+          </tr>
+          <tr>
             <td class="info pe">
               <b>{{ isZH ? '格式错误' : 'PE' }}</b><br>Presentation Error
             </td>
