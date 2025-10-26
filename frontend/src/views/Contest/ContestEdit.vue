@@ -126,7 +126,7 @@ onMounted(async () => {
       {{ t('oj.contest_problems') }}
     </Divider>
     <OjContestEdit :contest="contest" :overview="overview" />
-    <Form :label-width="120">
+    <Form :label-width="150">
       <FormItem>
         <Button type="primary" size="large" @click="submitForm">
           {{ t('oj.submit') }}
@@ -137,7 +137,7 @@ onMounted(async () => {
       <Divider simple class="divider">
         {{ t('oj.course_transfer') }}
       </Divider>
-      <Form label-position="right" :label-width="120">
+      <Form label-position="right" :label-width="150">
         <FormItem :label="t('oj.current_course')">
           <Input
             :placeholder="(contest as any).course?.name ?? t('oj.not_related_to_any_course')" class="contest-form-item"

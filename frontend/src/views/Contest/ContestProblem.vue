@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import { Button, Space, Spin } from 'view-ui-plus'
+import { Button, Space, Spin, Alert } from 'view-ui-plus'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Problem from '@/components/Problem'
@@ -40,7 +40,7 @@ onRouteParamUpdate(fetch)
 </script>
 
 <template>
-  <div class="contest-children">
+  <div v-if="!!totalProblems" class="contest-children">
     <Space class="problem-nav" wrap :size="[8, 8]">
       <Button
         v-for="i in totalProblems" :key="i" class="problem-nav-item"
@@ -60,6 +60,11 @@ onRouteParamUpdate(fetch)
       </Button>
     </div>
     <Spin size="large" fix :show="loading" />
+  </div>
+  <div v-else class="contest-children" style="padding: 20px">
+    <Alert type="warning" show-icon>
+      The problems of this contest are not available yet.
+    </Alert>
   </div>
 </template>
 

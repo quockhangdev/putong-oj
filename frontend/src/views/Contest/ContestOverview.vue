@@ -26,7 +26,9 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
       </h2>
       <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
       <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
-      <h4>Contest Type:&nbsp;&nbsp;{{ Number.parseInt(contest.option.type || 2000) === contestType.ICPC ? "ICPC" : "OI" }}</h4>
+      <h4>Contest Type:&nbsp;&nbsp;
+        <Tag :color="contest.option.type === contestType.OI ? 'green' : 'blue'">{{ Number.parseInt(contest.option.type || contestType.OI) === contestType.ICPC ? "ICPC" : "OI" }}</Tag>
+      </h4>
     </div>
     <div class="problem-table-container">
       <table class="problem-table">

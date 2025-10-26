@@ -50,10 +50,10 @@ COPY --from=frontend_builder /app/frontend/dist ./public
 
 COPY backend/setup.js .
 COPY backend/entrypoint.sh .
-RUN mkdir -p /app/data /app/logs /app/public/uploads
+RUN mkdir -p /app/data /app/logs /app/public/uploads /app/public/static
 
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp
-VOLUME [ "/app/data", "/app/logs", "/app/public/uploads" ]
+VOLUME [ "/app/data", "/app/logs", "/app/public/uploads", "/app/public/static" ]
 
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]

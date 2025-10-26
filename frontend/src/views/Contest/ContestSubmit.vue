@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import { Button, Space } from 'view-ui-plus'
+import { Alert, Button, Space } from 'view-ui-plus'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -41,7 +41,7 @@ async function submit () {
 </script>
 
 <template>
-  <div class="contest-children">
+  <div v-if="!!totalProblems" class="contest-children">
     <Space class="problem-nav" wrap :size="[8, 8]">
       <Button
         v-for="i in totalProblems" :key="i" class="problem-nav-item"
@@ -61,6 +61,11 @@ async function submit () {
         {{ t('oj.reset') }}
       </Button>
     </div>
+  </div>
+  <div v-else class="contest-children" style="padding: 20px">
+    <Alert type="warning" show-icon>
+      There is no problem in this contest. Please contact the contest administrator.
+    </Alert>
   </div>
 </template>
 

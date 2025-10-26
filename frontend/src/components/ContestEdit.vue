@@ -58,7 +58,7 @@ onBeforeMount(async () => {
       <template #item="{ element, index }">
         <div class="problem-item">
           <p>{{ element }} -- {{ jobs[element] }}</p>
-          <Icon type="md-close-circle" @click="removeJob(index)" />
+          <Icon class="pi pi-times-circle" @click="removeJob(index)" />
         </div>
       </template>
     </Draggable>

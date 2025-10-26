@@ -5,3 +5,5 @@ data/*
 !data/example
 public/uploads/*
 !public/uploads/.gitkeep
+static/*
+!static/.gitkeep

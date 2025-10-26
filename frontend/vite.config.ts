@@ -42,9 +42,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': { target: 'http://localhost:8008', changeOrigin: true },
-      '/uploads': { target: 'http://localhost:8008', changeOrigin: true },
-      '/ws': { target: 'ws://localhost:8009', ws: true },
+      '/api': { target: 'http://localhost:3000', changeOrigin: true },
+      '/uploads': { target: 'http://localhost:3000', changeOrigin: true },
+      '/ws': { target: 'ws://localhost:3001', ws: true },
     },
   },
 })
