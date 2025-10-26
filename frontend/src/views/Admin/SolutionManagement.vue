@@ -168,14 +168,14 @@ onRouteQueryUpdate(fetch)
 
 <template>
   <div class="max-w-[1440px] p-0">
-    <div class="border-b border-surface p-6">
-      <div class="flex font-semibold gap-4 items-center mb-4">
-        <i class="pi pi-copy text-2xl" />
+    <div class="p-6 border-b border-surface">
+      <div class="flex items-center gap-4 mb-4 font-semibold">
+        <i class="text-2xl pi pi-copy" />
         <h1 class="text-xl">
           {{ t('ptoj.solution_management') }}
         </h1>
       </div>
-      <div class="gap-4 grid grid-cols-1 items-end lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4">
+      <div class="grid items-end grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4">
         <UserFilter v-model="query.user" :disabled="loading" @select="onSearch" />
 
         <IconField>
@@ -217,7 +217,7 @@ onRouteQueryUpdate(fetch)
           </template>
         </Select>
 
-        <div class="flex gap-2 items-center justify-end xl:col-span-3">
+        <div class="flex items-center justify-end gap-2 xl:col-span-3">
           <Button
             icon="pi pi-file-export" severity="secondary" outlined :disabled="loading"
             @click="exportDialog = true"
@@ -237,11 +237,11 @@ onRouteQueryUpdate(fetch)
       :sort-field="query.sortBy" data-key="sid" :sort-order="query.sort" :lazy="true" :loading="loading" scrollable
       @sort="onSort"
     >
-      <Column selection-mode="multiple" class="pl-6 w-10" frozen />
+      <Column selection-mode="multiple" class="w-10 pl-6" frozen />
 
       <Column field="sid" class="font-medium text-center" frozen>
         <template #header>
-          <span class="text-center w-full">
+          <span class="w-full text-center">
             <i class="pi pi-hashtag" />
           </span>
         </template>
@@ -252,7 +252,7 @@ onRouteQueryUpdate(fetch)
         </template>
       </Column>
 
-      <Column :header="t('ptoj.user')" field="uid" class="font-medium max-w-36 md:max-w-48 min-w-36 truncate">
+      <Column :header="t('ptoj.user')" field="uid" class="font-medium truncate max-w-36 md:max-w-48 min-w-36">
         <template #body="{ data }">
           <a @click="onViewUser(data)">
             {{ data.uid }}
@@ -262,7 +262,7 @@ onRouteQueryUpdate(fetch)
 
       <Column field="pid" class="text-center">
         <template #header>
-          <span class="font-semibold text-center w-full">
+          <span class="w-full font-semibold text-center">
             {{ t('ptoj.problem') }}
           </span>
         </template>
@@ -275,7 +275,7 @@ onRouteQueryUpdate(fetch)
 
       <Column field="mid" class="text-center">
         <template #header>
-          <span class="font-semibold text-center w-full">
+          <span class="w-full font-semibold text-center">
             {{ t('ptoj.contest') }}
           </span>
         </template>
@@ -295,7 +295,7 @@ onRouteQueryUpdate(fetch)
             {{ judgeStatusLabels[data.judge as JudgeStatus] }}
           </span>
           <Tag
-            v-if="data.sim" severity="secondary" class="-my-px ml-2 text-xs"
+            v-if="data.sim" severity="secondary" class="ml-2 -my-px text-xs"
             :class="getSimilarityClassname(data.sim)"
           >
             {{ data.sim }}%
@@ -305,7 +305,7 @@ onRouteQueryUpdate(fetch)
 
       <Column field="time" class="text-right" sortable>
         <template #header>
-          <span class="font-semibold text-right w-full">
+          <span class="w-full font-semibold text-right">
             {{ t('ptoj.time') }}
           </span>
         </template>
@@ -316,7 +316,7 @@ onRouteQueryUpdate(fetch)
 
       <Column field="memory" class="text-right" sortable>
         <template #header>
-          <span class="font-semibold text-right w-full">
+          <span class="w-full font-semibold text-right">
             {{ t('ptoj.memory') }}
           </span>
         </template>
@@ -327,7 +327,7 @@ onRouteQueryUpdate(fetch)
 
       <Column field="language" class="text-center">
         <template #header>
-          <span class="font-semibold text-center w-full">
+          <span class="w-full font-semibold text-center">
             {{ t('ptoj.language') }}
           </span>
         </template>
@@ -342,9 +342,9 @@ onRouteQueryUpdate(fetch)
         </template>
       </Column>
 
-      <Column class="px-6 py-1 w-20">
+      <Column class="w-20 px-6 py-1">
         <template #body="{ data }">
-          <div class="flex gap-1 items-center">
+          <div class="flex items-center gap-1">
             <Button icon="pi pi-eye" text @click="onView(data)" />
           </div>
         </template>
@@ -358,7 +358,7 @@ onRouteQueryUpdate(fetch)
     </DataTable>
 
     <Paginator
-      class="border-surface border-t bottom-0 md:rounded-b-xl overflow-hidden sticky z-10"
+      class="sticky bottom-0 z-10 overflow-hidden border-t border-surface md:rounded-b-xl"
       :first="(query.page - 1) * query.pageSize" :rows="query.pageSize" :total-records="total"
       :current-page-report-template="t('ptoj.paginator_report')"
       template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" @page="onPage"
