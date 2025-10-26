@@ -201,8 +201,8 @@ onRouteQueryUpdate(fetch)
             <td class="contest-title">
               <Button type="text" class="table-button" @click="visit(item)">
                 <span class="button-text">{{ item.title }}</span>
-                <Tag :color="item.option.type === CType.OI ? 'green' : 'blue'" class="contest-mark">
-                  {{ item.option.type === CType.OI ? 'OI' : 'ICPC' }}
+                <Tag :color="item.option.type === CType.OI ? 'green' : 'blue'"  class="contest-mark">
+                  <span class="pi pi-trophy" style="font-size: 10px;"></span>&nbsp;{{ item.option.type === CType.OI ? 'OI' : 'ICPC' }}
                 </Tag>
                 <Poptip
                   v-show="item.status === status.Reserve" trigger="hover"

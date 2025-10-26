@@ -50,14 +50,17 @@ onRouteQueryUpdate(fetch)
 
 <template>
   <div class="home-wrap">
+    <div style="margin-bottom: 20px; margin-top: 10px;">
+      <img src="https://www.cit.ctu.edu.vn/images/Banner-Logo/Banner_06-8-2025.jpg" alt="banner" style="width: 100%; object-fit: cover; border-radius: 3px;" />
+    </div>
     <div class="news-header">
-      <span v-if="isZH" class="welcome-text">
+      <!-- <span v-if="isZH" class="welcome-text">
         中国计量大学在线评测系统
       </span>
       <span v-else class="welcome-text">
         Welcome to CTU Online Judge
-      </span>
-      <br>
+      </span> -->
+      <!-- <br> -->
       {{ t('oj.news_list') }}
     </div>
     <div v-if="list.length > 0">

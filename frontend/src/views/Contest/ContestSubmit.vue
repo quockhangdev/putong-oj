@@ -41,7 +41,12 @@ async function submit () {
 </script>
 
 <template>
-  <div v-if="!!totalProblems" class="contest-children">
+  <div v-if="!!totalProblems && contest.end < Date.now()" class="contest-children" style="padding: 20px">
+    <Alert type="warning" show-icon>
+      The contest has ended. Submissions are no longer accepted.
+    </Alert>
+  </div>
+  <div v-else-if="!!totalProblems" class="contest-children">
     <Space class="problem-nav" wrap :size="[8, 8]">
       <Button
         v-for="i in totalProblems" :key="i" class="problem-nav-item"
@@ -54,7 +59,7 @@ async function submit () {
     <div class="problem-content">
       <h1>{{ currentProblemId }}: {{ currentTitle }}</h1>
       <Submit :pid="String(pid)" />
-      <Button type="primary" @click="submit">
+      <Button :disabled="contest.end < Date.now()" type="primary" @click="submit">
         {{ t('oj.submit') }}
       </Button>
       <Button style="margin-left: 8px" @click="reset">

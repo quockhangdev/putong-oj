@@ -17,6 +17,8 @@ import emitter from '@/utils/emitter'
 import { timePretty } from '@/utils/formate'
 import { onRouteQueryUpdate, testcaseUrl } from '@/utils/helper'
 import 'highlight.js/styles/atom-one-light.css'
+import { useContestStore } from '@/store/modules/contest'
+import { contestType } from '@backend/utils/constants'
 
 highlight.registerLanguage('c', cpp)
 highlight.registerLanguage('cpp', cpp)
@@ -31,8 +33,10 @@ const color = $ref(constant.color)
 
 const session = useSessionStore()
 const solutionStore = useSolutionStore()
+const contestStore = useContestStore()
 const root = useRootStore()
 const { findOne, updateSolution } = solutionStore
+const { contest } = $(storeToRefs(contestStore))
 const { solution } = $(storeToRefs(solutionStore))
 const { isAdmin, isRoot } = storeToRefs(session)
 const route = useRoute()
@@ -58,6 +62,7 @@ function prettyCode (code) {
 async function fetch () {
   loading = true
   await findOne(route.params)
+  await contestStore.findOne({ cid: solution.mid })
   root.changeDomTitle({ title: `Solution ${solution.pid}` })
   loading = false
 }
@@ -142,10 +147,12 @@ onRouteQueryUpdate(fetch)
                 {{ solution.uid }}
               </router-link>
             </span>
-            <span v-if="solution.mid > 0">
+            <span v-if="solution.mid > 0">  
               {{ t('oj.contest_label') }}
               <router-link :to="{ name: 'contestOverview', params: { cid: solution.mid } }">
-                {{ solution.mid }}
+                {{ solution.mid }}&nbsp;&nbsp;<Tag :color="contest.option?.type === contestType.OI ? 'green' : 'blue'" class="contest-mark">
+                  {{ contest.option?.type === contestType.OI ? 'OI' : 'ICPC' }}
+                </Tag>
               </router-link>
             </span>
           </Space>
@@ -234,13 +241,13 @@ onRouteQueryUpdate(fetch)
               <Numeral :value="item.memory" format="0,0" /> <small>KB</small>
             </td>
             <td class="testcase-result" :class="[color[item.judge]]">
-              {{ result[item.judge] }}
+              {{ contest.option?.type === contestType.ICPC ? '-' : result[item.judge] }}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="solution-detail">
+    <div class="solution-detail" style="margin-bottom: 5px;">
       <pre v-if="solution.error" class="error"><code>{{ solution.error }}</code></pre>
       <Button style="margin-bottom: 10px; margin-top: 10px;" shape="circle" icon="ios-document-outline" @click="onCopy(solution.code)">
         {{ t('oj.click_to_copy_code') }}

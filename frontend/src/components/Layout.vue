@@ -46,14 +46,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-emphasis flex flex-col font-sans min-h-screen relative text-color">
+  <div class="relative flex flex-col min-h-screen font-sans bg-emphasis text-color">
     <Header />
     <div class="flex-auto lg:pt-4 lg:px-4 md:pt-2 md:px-2 min-h-[512px] mt-[61px]">
       <router-view
         class="bg-(--p-content-background) border border-surface layout-content md:rounded-xl mx-auto shadow-lg"
       />
     </div>
-    <div class="p-8 text-base/relaxed text-center">
+    <div class="p-8 text-center text-base/relaxed">
       <SelectButton
         v-model="selectedLang" class="block" :options="langs" option-label="label" option-value="value"
         :allow-empty="false" @change="onLangSelected"
@@ -62,15 +62,15 @@ onMounted(() => {
         Server time: {{ serverTime }}
       </div>
       <div class="cursor-pointer" @click="versionDialogVisible = true">
-        <div class="font-bold mb-px text-lg">
-          CTU OJ
+        <div class="mb-px text-lg font-bold">
+          CTU Online Judge
         </div>
         <div>Copyright &copy; 2025.</div>
       </div>
     </div>
   </div>
   <Dialog v-model:visible="versionDialogVisible" modal header="Info" class="mx-6">
-    <div class="font-mono space-y-4">
+    <div class="space-y-4 font-mono">
       <div>
         <div class="flex justify-between">
           <span class="font-bold">Backend</span>

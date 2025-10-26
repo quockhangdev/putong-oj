@@ -24,9 +24,9 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
       <h2 class="text-2xl font-bold">
         {{ contest.title }}
       </h2>
-      <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
-      <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
-      <h4>Contest Type:&nbsp;&nbsp;
+      <h4>Start time:&nbsp;&nbsp;{{ timePretty(contest.start) }}</h4>
+      <h4>End time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
+      <h4>Contest type:
         <Tag :color="contest.option.type === contestType.OI ? 'green' : 'blue'">{{ Number.parseInt(contest.option.type || contestType.OI) === contestType.ICPC ? "ICPC" : "OI" }}</Tag>
       </h4>
     </div>
