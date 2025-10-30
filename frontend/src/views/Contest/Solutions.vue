@@ -1,32 +1,36 @@
 <script lang="ts" setup>
 import type {
-  AccountSubmissionListQuery,
-  AccountSubmissionListQueryResult,
+  ContestSolutionListQuery,
+  ContestSolutionListQueryResult,
+  ExportFormat,
   JudgeStatus,
   Language,
 } from '@putongoj/shared'
-import { AccountSubmissionListQuerySchema } from '@putongoj/shared'
+import { ContestSolutionListQuerySchema } from '@putongoj/shared'
+import { storeToRefs } from 'pinia'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
-import InputNumber from 'primevue/inputnumber'
 import Paginator from 'primevue/paginator'
 import Select from 'primevue/select'
+import Tag from 'primevue/tag'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { findSubmissions } from '@/api/account'
+import { exportSolutions, findSolutions } from '@/api/contest'
+import ExportDialog from '@/components/ExportDialog.vue'
+import UserFilter from '@/components/UserFilter.vue'
+import { useContestStore } from '@/store/modules/contest'
 import {
   judgeStatusLabels,
   judgeStatusOptions,
   languageLabels,
   languageOptions,
 } from '@/utils/constant'
-import emitter from '@/utils/emitter'
+import { exportDataToFile } from '@/utils/export'
 import {
   getJudgeStatusClassname,
+  getSimilarityClassname,
   thousandSeparator,
   timePretty,
 } from '@/utils/formate'
@@ -38,22 +42,30 @@ const route = useRoute()
 const router = useRouter()
 const message = useMessage()
 
-const query = ref({} as AccountSubmissionListQuery)
-const docs = ref([] as AccountSubmissionListQueryResult['docs'])
+const {
+  contestId,
+  problemMap,
+  problemLabels,
+  problemOptions,
+} = storeToRefs(useContestStore())
+
+const query = ref({} as ContestSolutionListQuery)
+const docs = ref([] as ContestSolutionListQueryResult['docs'])
 const total = ref(0)
 const loading = ref(false)
+const exportDialog = ref(false)
 
 const hasFilter = computed(() => {
   return Boolean(
-    query.value.problem
-    || query.value.contest
+    query.value.user
+    || query.value.problem
     || Number.isInteger(query.value.judge)
     || query.value.language,
   )
 })
 
 async function fetch () {
-  const parsed = AccountSubmissionListQuerySchema.safeParse(route.query)
+  const parsed = ContestSolutionListQuerySchema.safeParse(route.query)
   if (parsed.success) {
     query.value = parsed.data
   } else {
@@ -62,7 +74,7 @@ async function fetch () {
   }
 
   loading.value = true
-  const resp = await findSubmissions(query.value)
+  const resp = await findSolutions(contestId.value, query.value)
   loading.value = false
   if (!resp.success) {
     message.error(t('ptoj.failed_fetch_solutions'), resp.message)
@@ -98,8 +110,8 @@ function onSearch () {
   router.replace({
     query: {
       ...route.query,
+      user: query.value.user || undefined,
       problem: query.value.problem || undefined,
-      contest: query.value.contest || undefined,
       judge: Number.isInteger(query.value.judge) ? query.value.judge : undefined,
       language: query.value.language || undefined,
       page: undefined,
@@ -113,7 +125,6 @@ function onReset () {
       ...route.query,
       user: undefined,
       problem: undefined,
-      contest: undefined,
       judge: undefined,
       language: undefined,
       page: undefined,
@@ -124,49 +135,55 @@ function onReset () {
 function onView (data: any) {
   router.push({ name: 'solution', params: { sid: data.sid } })
 }
-function onViewProblem (data: any) {
-  router.push({ name: 'problemInfo', params: { pid: data.pid } })
+function onViewUser (data: any) {
+  router.push({ name: 'UserProfile', params: { uid: data.uid } })
 }
-function onViewContest (data: any) {
-  if (!data.mid || data.mid <= 0) return
-  router.push({ name: 'contestOverview', params: { cid: data.mid } })
+function onViewProblem (data: any) {
+  router.push({
+    name: 'contestProblem',
+    params: {
+      cid: contestId.value,
+      id: problemMap.value.get(data.pid)! + 1,
+    },
+  })
 }
 
-emitter.on('submission-updated', (sid) => {
-  if (docs.value.some(item => item.sid === sid)) {
-    fetch()
+async function onExport (format: ExportFormat) {
+  message.info(t('ptoj.exporting_data'), t('ptoj.exporting_data_detail'))
+  const resp = await exportSolutions(contestId.value, query.value)
+  if (!resp.success) {
+    message.error(t('ptoj.failed_fetch_solutions'), resp.message)
+    exportDialog.value = false
+    return
   }
-})
+
+  const filename = `PutongOJ_Solutions_${Date.now()}`
+  try {
+    exportDataToFile(resp.data, filename, format)
+  } catch (err: any) {
+    message.error(t('ptoj.failed_export_data'), err.message)
+  }
+  exportDialog.value = false
+}
 
 onMounted(fetch)
 onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div class="max-w-6xl p-0">
+  <div class="-mt-5 p-0">
     <div class="border-b border-surface p-6">
-      <div class="flex font-semibold gap-4 items-center mb-4">
-        <i class="pi pi-copy text-2xl" />
-        <h1 class="text-xl">
-          {{ t('ptoj.my_submissions') }}
-        </h1>
-      </div>
       <div class="gap-4 grid grid-cols-1 items-end lg:grid-cols-3 md:grid-cols-2">
-        <IconField>
-          <InputNumber
-            v-model="query.problem" mode="decimal" :min="1" :use-grouping="false" fluid
-            :placeholder="t('ptoj.filter_by_problem')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-flag" />
-        </IconField>
+        <UserFilter v-model="query.user" :disabled="loading" @select="onSearch" />
 
-        <IconField>
-          <InputNumber
-            v-model="query.contest" mode="decimal" :min="-1" :use-grouping="false" fluid
-            :placeholder="t('ptoj.filter_by_contest')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-trophy" />
-        </IconField>
+        <Select
+          v-model="query.problem" fluid :options="problemOptions" option-label="label" option-value="value"
+          show-clear :placeholder="t('ptoj.filter_by_problem')" :disabled="loading" @change="onSearch"
+        >
+          <template #dropdownicon>
+            <i class="pi pi-flag" />
+          </template>
+        </Select>
 
         <Select
           v-model="query.judge" fluid :options="judgeStatusOptions" option-label="label" option-value="value"
@@ -191,7 +208,11 @@ onRouteQueryUpdate(fetch)
           </template>
         </Select>
 
-        <div class="flex gap-2 items-center justify-end md:col-span-2 xl:col-span-2">
+        <div class="flex gap-2 items-center justify-end md:col-span-2">
+          <Button
+            icon="pi pi-file-export" severity="secondary" outlined :disabled="loading"
+            @click="exportDialog = true"
+          />
           <Button icon="pi pi-refresh" severity="secondary" outlined :disabled="loading" @click="fetch" />
           <Button
             icon="pi pi-filter-slash" severity="secondary" outlined :disabled="loading || !hasFilter"
@@ -203,8 +224,9 @@ onRouteQueryUpdate(fetch)
     </div>
 
     <DataTable
-      class="-mb-px whitespace-nowrap" :value="docs" sort-mode="single" :sort-field="query.sortBy"
-      data-key="sid" :sort-order="query.sort" :lazy="true" :loading="loading" scrollable @sort="onSort"
+      class="-mb-px whitespace-nowrap" :value="docs" sort-mode="single"
+      :sort-field="query.sortBy" data-key="sid" :sort-order="query.sort" :lazy="true" :loading="loading" scrollable
+      @sort="onSort"
     >
       <Column field="sid" class="font-medium pl-6 text-center" frozen>
         <template #header>
@@ -219,6 +241,14 @@ onRouteQueryUpdate(fetch)
         </template>
       </Column>
 
+      <Column :header="t('ptoj.user')" field="uid" class="font-medium max-w-36 md:max-w-48 min-w-36 truncate">
+        <template #body="{ data }">
+          <a @click="onViewUser(data)">
+            {{ data.uid }}
+          </a>
+        </template>
+      </Column>
+
       <Column field="pid" class="text-center">
         <template #header>
           <span class="font-semibold text-center w-full">
@@ -227,24 +257,8 @@ onRouteQueryUpdate(fetch)
         </template>
         <template #body="{ data }">
           <a @click="onViewProblem(data)">
-            {{ data.pid }}
+            {{ problemLabels.get(data.pid) }}
           </a>
-        </template>
-      </Column>
-
-      <Column field="mid" class="text-center">
-        <template #header>
-          <span class="font-semibold text-center w-full">
-            {{ t('ptoj.contest') }}
-          </span>
-        </template>
-        <template #body="{ data }">
-          <a v-if="data.mid && data.mid > 0" @click="onViewContest(data)">
-            {{ data.mid }}
-          </a>
-          <span v-else>
-            -
-          </span>
         </template>
       </Column>
 
@@ -253,6 +267,12 @@ onRouteQueryUpdate(fetch)
           <span :class="getJudgeStatusClassname(data.judge as JudgeStatus)">
             {{ judgeStatusLabels[data.judge as JudgeStatus] }}
           </span>
+          <Tag
+            v-if="data.sim" severity="secondary" class="-my-px ml-2 text-xs"
+            :class="getSimilarityClassname(data.sim)"
+          >
+            {{ data.sim }}%
+          </Tag>
         </template>
       </Column>
 
@@ -308,5 +328,7 @@ onRouteQueryUpdate(fetch)
       :current-page-report-template="t('ptoj.paginator_report')"
       template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" @page="onPage"
     />
+
+    <ExportDialog v-model:visible="exportDialog" :estimated-count="total" @export="onExport" />
   </div>
 </template>

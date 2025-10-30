@@ -32,7 +32,7 @@ const solution = {
   find: (data: { [key: string]: any }) =>
     instance.get('/status/list', { params: data }),
   create: (data: { [key: string]: any }) =>
-    instance.post('/status', data),
+    instance.post<{ sid: number }>('/status', data),
   updateSolution: (solutionId: number, data: { judge: number }) =>
     instance.put<Enveloped<SolutionEntity>>(`/status/${solutionId}`, data),
 }
@@ -85,19 +85,6 @@ const news = {
     instance.put(`/news/${data.nid}`, data),
   delete: (data: { [key: string]: any }) =>
     instance.delete(`/news/${data.nid}`, data),
-}
-
-const group = {
-  findOne: (data: { [key: string]: any }) =>
-    instance.get(`/group/${data.gid}`, { params: data }),
-  find: (data: { [key: string]: any }) =>
-    instance.get('/group/list', { params: data }),
-  create: (data: { [key: string]: any }) =>
-    instance.post('/group/', data),
-  update: (data: { [key: string]: any }) =>
-    instance.put(`/group/${data.gid}`, data),
-  delete: (data: { [key: string]: any }) =>
-    instance.delete(`/group/${data.gid}`, data),
 }
 
 const tag = {
@@ -166,7 +153,6 @@ export default {
   problem,
   contest,
   news,
-  group,
   tag,
   discuss,
   course,

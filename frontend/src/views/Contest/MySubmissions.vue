@@ -6,18 +6,17 @@ import type {
   Language,
 } from '@putongoj/shared'
 import { AccountSubmissionListQuerySchema } from '@putongoj/shared'
+import { storeToRefs } from 'pinia'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
-import InputNumber from 'primevue/inputnumber'
 import Paginator from 'primevue/paginator'
 import Select from 'primevue/select'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { findSubmissions } from '@/api/account'
+import { useContestStore } from '@/store/modules/contest'
 import {
   judgeStatusLabels,
   judgeStatusOptions,
@@ -38,6 +37,13 @@ const route = useRoute()
 const router = useRouter()
 const message = useMessage()
 
+const {
+  contestId,
+  problemMap,
+  problemLabels,
+  problemOptions,
+} = storeToRefs(useContestStore())
+
 const query = ref({} as AccountSubmissionListQuery)
 const docs = ref([] as AccountSubmissionListQueryResult['docs'])
 const total = ref(0)
@@ -46,7 +52,6 @@ const loading = ref(false)
 const hasFilter = computed(() => {
   return Boolean(
     query.value.problem
-    || query.value.contest
     || Number.isInteger(query.value.judge)
     || query.value.language,
   )
@@ -56,6 +61,7 @@ async function fetch () {
   const parsed = AccountSubmissionListQuerySchema.safeParse(route.query)
   if (parsed.success) {
     query.value = parsed.data
+    query.value.contest = contestId.value
   } else {
     router.replace({ query: {} })
     return
@@ -81,6 +87,7 @@ function onSort (event: any) {
       ...route.query,
       sortBy: event.sortField,
       sort: event.sortOrder,
+      contest: undefined,
     },
   })
 }
@@ -90,6 +97,7 @@ function onPage (event: any) {
     query: {
       ...route.query,
       page: (event.first / event.rows + 1),
+      contest: undefined,
     },
   })
 }
@@ -99,9 +107,9 @@ function onSearch () {
     query: {
       ...route.query,
       problem: query.value.problem || undefined,
-      contest: query.value.contest || undefined,
       judge: Number.isInteger(query.value.judge) ? query.value.judge : undefined,
       language: query.value.language || undefined,
+      contest: undefined,
       page: undefined,
     },
   })
@@ -125,11 +133,13 @@ function onView (data: any) {
   router.push({ name: 'solution', params: { sid: data.sid } })
 }
 function onViewProblem (data: any) {
-  router.push({ name: 'problemInfo', params: { pid: data.pid } })
-}
-function onViewContest (data: any) {
-  if (!data.mid || data.mid <= 0) return
-  router.push({ name: 'contestOverview', params: { cid: data.mid } })
+  router.push({
+    name: 'contestProblem',
+    params: {
+      cid: contestId.value,
+      id: problemMap.value.get(data.pid)! + 1,
+    },
+  })
 }
 
 emitter.on('submission-updated', (sid) => {
@@ -143,30 +153,17 @@ onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div class="max-w-6xl p-0">
+  <div class="-mt-5 p-0">
     <div class="border-b border-surface p-6">
-      <div class="flex font-semibold gap-4 items-center mb-4">
-        <i class="pi pi-copy text-2xl" />
-        <h1 class="text-xl">
-          {{ t('ptoj.my_submissions') }}
-        </h1>
-      </div>
       <div class="gap-4 grid grid-cols-1 items-end lg:grid-cols-3 md:grid-cols-2">
-        <IconField>
-          <InputNumber
-            v-model="query.problem" mode="decimal" :min="1" :use-grouping="false" fluid
-            :placeholder="t('ptoj.filter_by_problem')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-flag" />
-        </IconField>
-
-        <IconField>
-          <InputNumber
-            v-model="query.contest" mode="decimal" :min="-1" :use-grouping="false" fluid
-            :placeholder="t('ptoj.filter_by_contest')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-trophy" />
-        </IconField>
+        <Select
+          v-model="query.problem" fluid :options="problemOptions" option-label="label" option-value="value"
+          show-clear :placeholder="t('ptoj.filter_by_problem')" :disabled="loading" @change="onSearch"
+        >
+          <template #dropdownicon>
+            <i class="pi pi-flag" />
+          </template>
+        </Select>
 
         <Select
           v-model="query.judge" fluid :options="judgeStatusOptions" option-label="label" option-value="value"
@@ -191,7 +188,7 @@ onRouteQueryUpdate(fetch)
           </template>
         </Select>
 
-        <div class="flex gap-2 items-center justify-end md:col-span-2 xl:col-span-2">
+        <div class="flex gap-2 items-center justify-end lg:col-span-3">
           <Button icon="pi pi-refresh" severity="secondary" outlined :disabled="loading" @click="fetch" />
           <Button
             icon="pi pi-filter-slash" severity="secondary" outlined :disabled="loading || !hasFilter"
@@ -227,24 +224,8 @@ onRouteQueryUpdate(fetch)
         </template>
         <template #body="{ data }">
           <a @click="onViewProblem(data)">
-            {{ data.pid }}
+            {{ problemLabels.get(data.pid) }}
           </a>
-        </template>
-      </Column>
-
-      <Column field="mid" class="text-center">
-        <template #header>
-          <span class="font-semibold text-center w-full">
-            {{ t('ptoj.contest') }}
-          </span>
-        </template>
-        <template #body="{ data }">
-          <a v-if="data.mid && data.mid > 0" @click="onViewContest(data)">
-            {{ data.mid }}
-          </a>
-          <span v-else>
-            -
-          </span>
         </template>
       </Column>
 

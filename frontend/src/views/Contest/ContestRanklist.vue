@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 import { Alert, BackTop, Button, Icon, Poptip, Space, Spin, Switch } from 'view-ui-plus'
 import { inject, onBeforeMount, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 import { useContestStore } from '@/store/modules/contest'
 import { useSessionStore } from '@/store/modules/session'
@@ -17,12 +17,12 @@ const { t } = useI18n()
 const contestStore = useContestStore()
 const sessionStore = useSessionStore()
 const route = useRoute()
-const { isRoot } = $(storeToRefs(sessionStore))
+const router = useRouter()
+const { isAdmin, profile } = storeToRefs(sessionStore)
 const message = inject('$Message') as typeof Message
 
 const cid = $computed(() => Number.parseInt(route.params.cid as string) || 1)
 const { contest, overview } = storeToRefs(contestStore)
-const { isAdmin } = $(storeToRefs(sessionStore))
 
 const ranklist = ref({} as Ranklist)
 const ranklistInfo = ref({} as RanklistInfo)
@@ -30,6 +30,16 @@ const loading = ref(false)
 
 let autoRefresh: any = null
 const AUTO_REFRESH_GAP = 10 * 1000
+
+const isManageable = $computed(() => {
+  if (contest.value.cid !== Number(route.params.cid)) {
+    return false
+  }
+  if (isAdmin.value || contest.value.course?.role.manageContest) {
+    return true
+  }
+  return false
+})
 
 async function getRanklist () {
   loading.value = true
@@ -69,6 +79,22 @@ function formateAcceptedAt (acceptedAt: number) {
   return `${hours}:${minutes}`
 }
 
+function onViewSolutions (user: string, problem: number) {
+  if (isManageable) {
+    router.push({
+      name: 'ContestSolutions',
+      params: { cid },
+      query: { user, problem },
+    })
+  } else if (profile.value?.uid === user) {
+    router.push({
+      name: 'ContestMySubmissions',
+      params: { cid },
+      query: { problem },
+    })
+  }
+}
+
 onBeforeMount(getRanklist)
 onBeforeUnmount(clearAutoRefresh)
 </script>
@@ -82,7 +108,7 @@ onBeforeUnmount(clearAutoRefresh)
   <div v-else class="contest-children">
     <div class="board-header">
       <Space>
-        <Button size="small" shape="circle" type="primary" :loading="loading" icon="md-refresh" @click="getRanklist" />
+        <Button shape="circle" type="primary" :loading="loading" icon="md-refresh" @click="getRanklist" />
         <Switch @on-change="setAutoRefresh">
           <template #open>
             <Icon type="md-checkmark" />
@@ -93,7 +119,7 @@ onBeforeUnmount(clearAutoRefresh)
         </Switch>
         <span>{{ t('oj.auto_refresh') }}</span>
         <Button
-          v-if="isRoot && ranklistInfo.isEnded" size="small" shape="circle" type="primary" icon="md-download"
+          v-if="isManageable" shape="circle" type="primary" icon="md-download"
           @click="() => exportSheet(contest, ranklist)"
         />
       </Space>
@@ -161,50 +187,38 @@ onBeforeUnmount(clearAutoRefresh)
             <td class="table-penalty">
               {{ item.penalty }}
             </td>
-            <template v-for="(pid, pindex) in contest.list">
+              <template v-for="(pid, pindex) in contest.list">
               <td v-if="!item[pid]" :key="`${pid} ${1}`" class="table-problem" />
               <td
                 v-else-if="item[pid].acceptedAt" :key="`${pid} ${2}`" class="table-problem"
-                :class="[item[pid].isPrime ? 'prime' : 'normal']"
+                :class="[item[pid].isPrime ? 'prime' : 'normal']" @click="() => onViewSolutions(item.uid, pid)"
               >
-                <router-link
-                  :to="{ name: 'contestStatus', params: { cid }, query: { uid: item.uid, pid: pindex + 1 } }"
-                >
-                  <span v-if="contest.option.type === contestType.ICPC" class="cell-accept">
-                    {{ item[pid].failed > 0 ? `+${item[pid].failed}` : '+' }}
-                  </span>
-                  <span v-if="contest.option.type === contestType.OI" class="cell-accept">
-                    {{ item[pid].failed > 0 ? `100.00 (+${item[pid].failed})` : '100.00' }}
-                  </span>
-                  <span class="cell-time">
-                    {{ formateAcceptedAt(item[pid].acceptedAt - contest.start) }}
-                  </span>
-                </router-link>
+                <span v-if="contest.option.type === contestType.ICPC" class="cell-accept">
+                  {{ item[pid].failed > 0 ? `+${item[pid].failed}` : '+' }}
+                </span>
+                <span v-else-if="contest.option.type === contestType.OI" class="cell-accept">
+                  {{ item[pid].failed > 0 ? `100.00 (+${item[pid].failed})` : '100.00' }}
+                </span>
+                <span class="cell-time">
+                  {{ formateAcceptedAt(item[pid].acceptedAt - contest.start) }}
+                </span>
               </td>
-              <td v-else :key="`${pid} ${3}`" class="table-problem">
-                <router-link
-                  :to="{ name: 'contestStatus', params: { cid }, query: { uid:  item.uid, pid: pindex + 1 } }"
-                >
-                  <Space v-if="contest.option.type === contestType.OI">
-                    <span v-if="item[pid].partial" class="cell-failed">
-                      {{ (item[pid].failed - 1) > 0 ? item[pid].partial.toFixed(2) + ` (+${item[pid].failed - 1})` : item[pid].partial.toFixed(2) }}
-                    </span>
-                    <span v-else-if="item[pid].failed" class="cell-failed">
-                      -{{ item[pid].failed }}
-                    </span>
-                    <span v-else class="cell-pending">
-                      0.00
-                    </span>
-                  </Space>
-                  <Space v-if="contest.option.type === contestType.ICPC">
-                    <span v-if="item[pid].failed" class="cell-failed">
-                      -{{ item[pid].failed }}
-                    </span>
-                    <span v-if="item[pid].pending" class="cell-pending">
-                      +{{ item[pid].pending }}
-                    </span>
-                  </Space>
-                </router-link>
+              <td v-else :key="`${pid} ${3}`" class="table-problem" @click="() => onViewSolutions(item.uid, pid)">
+                <Space v-if="contest.option.type === contestType.OI">
+                  <span v-if="item[pid].partial" class="cell-failed">
+                    {{ (item[pid].failed - 1) > 0 ? item[pid].partial.toFixed(2) + ` (+${item[pid].failed - 1})` : item[pid].partial.toFixed(2) }}
+                  </span>
+                  <span v-else-if="item[pid].failed" class="cell-failed">
+                    -{{ item[pid].failed }}
+                  </span>
+                  <span v-else class="cell-pending">
+                    0.00
+                  </span>
+                </Space>
+                <Space v-else-if="contest.option.type === contestType.ICPC">
+                  <span v-if="item[pid].failed" class="cell-failed">-{{ item[pid].failed }}</span>
+                  <span v-if="item[pid].pending" class="cell-pending">+{{ item[pid].pending }}</span>
+                </Space>
               </td>
             </template>
           </tr>
