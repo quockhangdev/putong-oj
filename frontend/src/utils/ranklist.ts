@@ -5,6 +5,7 @@ import { contestLabeling } from './formate'
 import { contestType } from '@backend/utils/constants'
 
 const PENALTY = 20 // Penalty for failed submissions: 20 minutes
+const PARTIAL_PENALTY = 5 // Penalty for partial submissions: 5 minutes
 
 export function normalize (ranklist: RawRanklist, contest: ContestEntityView): Ranklist {
   const list: Ranklist = [] // Result
@@ -26,7 +27,7 @@ export function normalize (ranklist: RawRanklist, contest: ContestEntityView): R
         penalty += submission.failed * PENALTY
       } else if (contest.option.type === contestType.OI && submission.partial) {
         solved += submission.partial // For OI, add partial score
-        penalty += submission.failed * PENALTY
+        penalty += submission.failed * PARTIAL_PENALTY
       }
     }
     list.push({
