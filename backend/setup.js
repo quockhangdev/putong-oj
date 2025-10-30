@@ -8,7 +8,7 @@ const baseDir = resolve(__dirname, 'dist')
 const logsDir = resolve(__dirname, 'logs')
 const jobsDir = resolve(baseDir, 'jobs')
 
-const WORKER_INSTANCES = Number.parseInt(env.PTOJ_WORKER_INSTANCES, 10) || 2
+const WORKER_INSTANCES = Number.parseInt(env.PTOJ_WORKER_INSTANCES, 10) || 4
 
 async function main () {
   const apps = []
