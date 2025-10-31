@@ -55,11 +55,12 @@ export enum JudgeStatus {
 export enum Language {
   C = 1,
   Cpp11 = 2,
-  Java = 3,
-  Python = 4,
   Cpp17 = 5,
   Cpp20 = 6,
   Cpp23 = 7,
+  Java = 3,
+  Python = 4,
+  PyPy = 8,
 }
 
 export enum ExportFormat {

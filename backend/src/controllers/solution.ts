@@ -80,7 +80,7 @@ const create = async (ctx: Context) => {
   const language = Number.parseInt(opt.language)
   const mid = Number.parseInt(opt.mid) || -1
 
-  if (language < 0 || language > 7) {
+  if (language < 0 || language > 8) {
     ctx.throw(400, 'Invalid language')
   }
   if (code.length < 8 || code.length > 16384) {
