@@ -65,7 +65,7 @@ onMounted(() => {
         <div class="mb-px text-lg font-bold">
           CTU Online Judge
         </div>
-        <div>Copyright &copy; 2025.</div>
+        <div>proudly developed by Putong OJ</div>
       </div>
     </div>
   </div>
