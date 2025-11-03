@@ -116,7 +116,7 @@ const create = async (ctx: Context) => {
   if (!problem) {
     ctx.throw(400, 'No such a problem')
   }
-  if (problem.status === status.Reserve) {
+  if (!profile.isAdmin && problem.status === status.Reserve) {
     ctx.throw(400, 'Problem is under reserve')
   }
   /**
