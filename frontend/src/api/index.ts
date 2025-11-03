@@ -15,22 +15,9 @@ const utils = {
     instance.get('/ranklist/list', { params }),
 }
 
-const testcase = {
-  findOne: (data: { [key: string]: any }) =>
-    instance.get(`/testcase/${data.pid}/${data.uuid}`, { params: data }),
-  find: (data: { [key: string]: any }) =>
-    instance.get(`/testcase/${data.pid}`, { params: data }),
-  create: (data: { [key: string]: any }) =>
-    instance.post(`/testcase/${data.pid}`, data),
-  delete: (data: { [key: string]: any }) =>
-    instance.delete(`/testcase/${data.pid}/${data.uuid}`, data),
-}
-
 const solution = {
   findOne: (data: { [key: string]: any }) =>
     instance.get(`/status/${data.sid}`, { params: data }),
-  find: (data: { [key: string]: any }) =>
-    instance.get('/status/list', { params: data }),
   create: (data: { [key: string]: any }) =>
     instance.post<{ sid: number }>('/status', data),
   updateSolution: (solutionId: number, data: { judge: number }) =>
@@ -148,7 +135,6 @@ const course = {
 
 export default {
   ...utils,
-  testcase,
   solution,
   problem,
   contest,

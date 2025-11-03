@@ -1,26 +1,22 @@
 <script lang="ts" setup>
 import type {
-  AdminSolutionListQuery,
-  AdminSolutionListQueryResult,
-  ExportFormat,
   JudgeStatus,
+  ProblemSolutionListQuery,
+  ProblemSolutionListQueryResult,
 } from '@putongoj/shared'
-import { AdminSolutionListQuerySchema } from '@putongoj/shared'
+import { ProblemSolutionListQuerySchema } from '@putongoj/shared'
+import { storeToRefs } from 'pinia'
 import Button from 'primevue/button'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
-import InputNumber from 'primevue/inputnumber'
 import Paginator from 'primevue/paginator'
 import Select from 'primevue/select'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { exportSolutions, findSolutions } from '@/api/admin'
-import ExportDialog from '@/components/ExportDialog.vue'
+import { findSolutions } from '@/api/problem'
 import SolutionDataTable from '@/components/SolutionDataTable.vue'
 import UserFilter from '@/components/UserFilter.vue'
+import { useProblemStore } from '@/store/modules/problem'
 import { judgeStatusOptions, languageOptions } from '@/utils/constant'
-import { exportDataToFile } from '@/utils/export'
 import { getJudgeStatusClassname } from '@/utils/formate'
 import { onRouteQueryUpdate } from '@/utils/helper'
 import { useMessage } from '@/utils/message'
@@ -30,25 +26,23 @@ const route = useRoute()
 const router = useRouter()
 const message = useMessage()
 
-const query = ref({} as AdminSolutionListQuery)
-const docs = ref([] as AdminSolutionListQueryResult['docs'])
+const { problem } = storeToRefs(useProblemStore())
+
+const query = ref({} as ProblemSolutionListQuery)
+const docs = ref([] as ProblemSolutionListQueryResult['docs'])
 const total = ref(0)
 const loading = ref(false)
-const selectedDocs = ref([] as AdminSolutionListQueryResult['docs'])
-const exportDialog = ref(false)
 
 const hasFilter = computed(() => {
   return Boolean(
     query.value.user
-    || query.value.problem
-    || query.value.contest
     || Number.isInteger(query.value.judge)
     || query.value.language,
   )
 })
 
 async function fetch () {
-  const parsed = AdminSolutionListQuerySchema.safeParse(route.query)
+  const parsed = ProblemSolutionListQuerySchema.safeParse(route.query)
   if (parsed.success) {
     query.value = parsed.data
   } else {
@@ -57,7 +51,7 @@ async function fetch () {
   }
 
   loading.value = true
-  const resp = await findSolutions(query.value)
+  const resp = await findSolutions(problem.value.pid, query.value)
   loading.value = false
   if (!resp.success) {
     message.error(t('ptoj.failed_fetch_solutions'), resp.message)
@@ -94,8 +88,6 @@ function onSearch () {
     query: {
       ...route.query,
       user: query.value.user || undefined,
-      problem: query.value.problem || undefined,
-      contest: query.value.contest || undefined,
       judge: Number.isInteger(query.value.judge) ? query.value.judge : undefined,
       language: query.value.language || undefined,
       page: undefined,
@@ -108,8 +100,6 @@ function onReset () {
     query: {
       ...route.query,
       user: undefined,
-      problem: undefined,
-      contest: undefined,
       judge: undefined,
       language: undefined,
       page: undefined,
@@ -117,55 +107,15 @@ function onReset () {
   })
 }
 
-async function onExport (format: ExportFormat) {
-  message.info(t('ptoj.exporting_data'), t('ptoj.exporting_data_detail'))
-  const resp = await exportSolutions(query.value)
-  if (!resp.success) {
-    message.error(t('ptoj.failed_fetch_solutions'), resp.message)
-    exportDialog.value = false
-    return
-  }
-
-  const filename = `PutongOJ_Solutions_${Date.now()}`
-  try {
-    exportDataToFile(resp.data, filename, format)
-  } catch (err: any) {
-    message.error(t('ptoj.failed_export_data'), err.message)
-  }
-  exportDialog.value = false
-}
-
 onMounted(fetch)
 onRouteQueryUpdate(fetch)
 </script>
 
 <template>
-  <div class="max-w-[1440px] p-0">
-    <div class="p-6 border-b border-surface">
-      <div class="flex items-center gap-4 mb-4 font-semibold">
-        <i class="text-2xl pi pi-copy" />
-        <h1 class="text-xl">
-          {{ t('ptoj.solution_management') }}
-        </h1>
-      </div>
-      <div class="grid items-end grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4">
+  <div class="-mt-6 lg:-mt-11 p-0">
+    <div class="border-b border-surface p-6">
+      <div class="gap-4 grid grid-cols-1 items-end lg:grid-cols-3 md:grid-cols-2">
         <UserFilter v-model="query.user" :disabled="loading" @select="onSearch" />
-
-        <IconField>
-          <InputNumber
-            v-model="query.problem" mode="decimal" :min="1" fluid :use-grouping="false"
-            :placeholder="t('ptoj.filter_by_problem')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-flag" />
-        </IconField>
-
-        <IconField>
-          <InputNumber
-            v-model="query.contest" mode="decimal" :min="-1" fluid :use-grouping="false"
-            :placeholder="t('ptoj.filter_by_contest')" :disabled="loading" @keypress.enter="onSearch"
-          />
-          <InputIcon class="pi pi-trophy" />
-        </IconField>
 
         <Select
           v-model="query.judge" fluid :options="judgeStatusOptions" option-label="label" option-value="value"
@@ -190,11 +140,7 @@ onRouteQueryUpdate(fetch)
           </template>
         </Select>
 
-        <div class="flex items-center justify-end gap-2 xl:col-span-3">
-          <Button
-            icon="pi pi-file-export" severity="secondary" outlined :disabled="loading"
-            @click="exportDialog = true"
-          />
+        <div class="flex gap-2 items-center justify-end lg:col-span-3 md:col-span-1">
           <Button icon="pi pi-refresh" severity="secondary" outlined :disabled="loading" @click="fetch" />
           <Button
             icon="pi pi-filter-slash" severity="secondary" outlined :disabled="loading || !hasFilter"
@@ -206,17 +152,15 @@ onRouteQueryUpdate(fetch)
     </div>
 
     <SolutionDataTable
-      v-model:selection="selectedDocs" class="-mb-px" :value="docs" :loading="loading"
-      :sort-field="query.sortBy" :sort-order="query.sort" selectable @sort="onSort"
+      class="-mb-px" :value="docs" :loading="loading" :sort-field="query.sortBy"
+      :sort-order="query.sort" hide-problem hide-contest @sort="onSort"
     />
 
     <Paginator
-      class="sticky bottom-0 z-10 overflow-hidden border-t border-surface md:rounded-b-xl"
+      class="border-surface border-t bottom-0 md:rounded-b-xl overflow-hidden sticky z-10"
       :first="(query.page - 1) * query.pageSize" :rows="query.pageSize" :total-records="total"
       :current-page-report-template="t('ptoj.paginator_report')"
       template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink" @page="onPage"
     />
-
-    <ExportDialog v-model:visible="exportDialog" :estimated-count="total" @export="onExport" />
   </div>
 </template>
