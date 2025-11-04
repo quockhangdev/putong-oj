@@ -118,6 +118,17 @@ async function markAsSkipped () {
   })
 }
 
+function calculateScore () {
+  if (contest.option?.type === contestType.OI) {
+    let totalScore = 0
+    for (const testcase of solution.testcases || []) {
+      totalScore += (testcase.judge === 3 ? 1 : 0)
+    }
+    return `(${totalScore} / ${solution.testcases?.length})`
+  }
+  return null
+}
+
 emitter.on('submission-updated', (sid) => {
   if (Number(route.params.sid) === sid) {
     fetch()
@@ -134,6 +145,9 @@ onRouteQueryUpdate(fetch)
       <Col flex="auto" class="solution-header-col">
         <h1 class="solution-result">
           {{ result[solution.judge || 0] }}
+          <span style="font-family: monospace; font-size: 18px;">
+            {{ calculateScore() }}
+          </span>
         </h1>
         <Space direction="vertical">
           <Space class="solution-info" split wrap>
