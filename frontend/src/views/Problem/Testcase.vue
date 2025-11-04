@@ -185,6 +185,8 @@ async function confirmImport () {
       const resp = await createTestcase(problem.value.pid, {
         in: testcase.inputContent.replace(/\r\n/g, '\n'),
         out: testcase.outputContent.replace(/\r\n/g, '\n'),
+        fin: testcase.inputName,
+        fout: testcase.outputName,
       })
 
       if (resp.success) {
@@ -261,11 +263,11 @@ fetchTestcases()
         <template #body="{ data }">
           <div class="flex items-center gap-2">
             <a :href="testcaseUrl(problem.pid, data.uuid, 'in')" target="_blank" class="text-primary">
-              {{ t('ptoj.input') }}
+              {{ data.fin || t('ptoj.input') }}
             </a>
             <Divider layout="vertical" />
             <a :href="testcaseUrl(problem.pid, data.uuid, 'out')" target="_blank" class="text-primary">
-              {{ t('ptoj.output') }}
+              {{ data.fout || t('ptoj.output') }}
             </a>
           </div>
         </template>

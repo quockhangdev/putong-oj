@@ -114,7 +114,8 @@ export async function createTestcase (ctx: Context) {
 
   const testin = ctx.request.body.in || ''
   const testout = ctx.request.body.out || ''
-  const fname = ctx.request.body.fname || ''
+  const fin = ctx.request.body.fin || ''
+  const fout = ctx.request.body.fout || ''
 
   if (!testin && !testout) {
     ctx.throw(400, 'Cannot create testcase without both input and output')
@@ -132,6 +133,8 @@ export async function createTestcase (ctx: Context) {
   const meta = await fse.readJson(path.resolve(testDir, 'meta.json'))
   meta.testcases.push({
     uuid: id,
+    fin: fin || `${id}.in`,
+    fout: fout || `${id}.out`,
   })
 
   await Promise.all([
