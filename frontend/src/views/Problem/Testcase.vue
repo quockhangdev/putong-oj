@@ -5,6 +5,7 @@ import type {
 } from '@putongoj/shared'
 import type { TestcasePair } from '@/utils/testcase'
 import { TestcaseFileType } from '@putongoj/shared'
+import { Tooltip } from 'view-ui-plus'
 import { storeToRefs } from 'pinia'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
@@ -293,6 +294,16 @@ function cancelImport () {
   parsedTestcases.value = []
 }
 
+function shortFileName (name: string, length = 30): string {
+  if (!name) return ''
+  if (name.length <= length) return name
+  const extIndex = name.lastIndexOf('.')
+  if (extIndex === -1 || extIndex >= length - 3) {
+    return name.slice(0, length - 3) + '...'
+  }
+  return name.slice(0, extIndex - 3) + '...' + name.slice(extIndex)
+}
+
 fetchTestcases()
 </script>
 
@@ -332,13 +343,17 @@ fetchTestcases()
       <Column :header="t('ptoj.files')">
         <template #body="{ data }">
           <div class="flex items-center gap-2">
-            <a :href="testcaseUrl(problem.pid, data.uuid, 'in')" target="_blank" class="text-primary">
-              {{ data.fin || t('ptoj.input') }}
-            </a>
+            <Tooltip :content="data.fin || t('ptoj.input')" placement="top" max-width="800">
+              <a :href="testcaseUrl(problem.pid, data.uuid, 'in')" target="_blank" class="text-primary">
+                {{ shortFileName(data.fin) || t('ptoj.input') }}
+              </a>
+            </Tooltip>
             <Divider layout="vertical" />
-            <a :href="testcaseUrl(problem.pid, data.uuid, 'out')" target="_blank" class="text-primary">
-              {{ data.fout || t('ptoj.output') }}
-            </a>
+            <Tooltip :content="data.fout || t('ptoj.output')" placement="top" max-width="800">
+              <a :href="testcaseUrl(problem.pid, data.uuid, 'out')" target="_blank" class="text-primary">
+                {{ shortFileName(data.fout) || t('ptoj.output') }}
+              </a>
+            </Tooltip>
           </div>
         </template>
       </Column>
