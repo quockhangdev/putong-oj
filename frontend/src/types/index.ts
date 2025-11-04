@@ -65,6 +65,7 @@ export type ContestDetail = ContestEntityView
 export interface RawRanklist {
   [uid: string]: {
     nick: string
+    privilege: typeof privilege[keyof typeof privilege]
     [pid: number]: {
       acceptedAt?: number
       failed: number
@@ -84,6 +85,7 @@ export interface RanklistInfo {
 export interface RanklistRow {
   rank: number
   uid: string
+  privilege: typeof privilege[keyof typeof privilege]
   nick: string
   solved: number
   penalty: number

@@ -12,6 +12,7 @@ import { useSessionStore } from '@/store/modules/session'
 import { contestLabeling, timePretty } from '@/utils/formate'
 import { exportSheet, normalize } from '@/utils/ranklist'
 import { contestRanklistVisibility, contestType } from '@backend/utils/constants'
+import { privilege } from '@/utils/constant'
 
 const { t } = useI18n()
 const contestStore = useContestStore()
@@ -167,21 +168,41 @@ onBeforeUnmount(clearAutoRefresh)
             </td>
           </tr>
           <tr v-for="(item, index) in ranklist" :key="index">
-            <td class="table-rank">
+            <td class="table-rank" :style="{
+              color: item.privilege === privilege.Banned ? 'red' : 'inherit',
+              textDecoration: item.privilege === privilege.Banned ? 'line-through' : 'none',
+              backgroundColor: item.privilege === privilege.Banned ? '#ffecec' : 'inherit',
+            }">
               {{ item.rank }}
             </td>
-            <td class="table-uid">
+            <td class="table-uid" :style="{
+              color: item.privilege === privilege.Banned ? 'red' : 'inherit',
+              textDecoration: item.privilege === privilege.Banned ? 'line-through' : 'none',
+              backgroundColor: item.privilege === privilege.Banned ? '#ffecec' : 'inherit',
+            }">
               <router-link :to="{ name: 'UserProfile', params: { uid: item.uid } }">
                 {{ item.uid }}
               </router-link>
             </td>
-            <td class="table-nick">
+            <td class="table-nick" :style="{
+              color: item.privilege === privilege.Banned ? 'red' : 'inherit',
+              textDecoration: item.privilege === privilege.Banned ? 'line-through' : 'none',
+              backgroundColor: item.privilege === privilege.Banned ? '#ffecec' : 'inherit',
+            }">
               {{ item.nick }}
             </td>
-            <td v-if="contest.option.type === contestType.ICPC" class="table-solve">
+            <td v-if="contest.option.type === contestType.ICPC" class="table-solve" :style="{
+              color: item.privilege === privilege.Banned ? 'red' : 'inherit',
+              textDecoration: item.privilege === privilege.Banned ? 'line-through' : 'none',
+              backgroundColor: item.privilege === privilege.Banned ? '#ffecec' : 'inherit',
+            }">
               {{ item.solved }}
             </td>
-            <td v-if="contest.option.type === contestType.OI" class="table-solve">
+            <td v-if="contest.option.type === contestType.OI" class="table-solve" :style="{
+              color: item.privilege === privilege.Banned ? 'red' : 'inherit',
+              textDecoration: item.privilege === privilege.Banned ? 'line-through' : 'none',
+              backgroundColor: item.privilege === privilege.Banned ? '#ffecec' : 'inherit',
+            }">
               {{ item.solved.toFixed(2) }}
             </td>
             <td class="table-penalty">
