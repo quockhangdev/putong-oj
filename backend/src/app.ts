@@ -33,12 +33,12 @@ app.use(session({
 }, app))
 
 app.use(koaBody({
-  jsonLimit: '8mb', // 限制 JSON 数据大小
-  formLimit: '8mb', // 限制表单数据大小
-  textLimit: '8mb', // 限制文本数据大小
-  multipart: true, // 支持文件上传
+  jsonLimit: '50mb', // increase JSON payload size
+  formLimit: '50mb', // increase form payload size
+  textLimit: '50mb', // increase text payload size
+  multipart: true, // support file uploads
   formidable: {
-    maxFileSize: 4 * 1024 * 1024, // 限制文件大小
+    maxFileSize: 100 * 1024 * 1024, // allow up to 100 MB files (e.g., large zip)
   },
 }))
 

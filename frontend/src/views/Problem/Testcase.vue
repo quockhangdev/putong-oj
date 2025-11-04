@@ -159,6 +159,13 @@ async function onFileSelected (event: Event) {
 
     parsedTestcases.value = pairs
     importDialog.value = true
+
+    if (parsedTestcases.value.length > 0) {
+      // Add sort by input name, for better user experience
+      parsedTestcases.value.sort((a, b) => {
+        return a.inputName.localeCompare(b.inputName)
+      })
+    }
   } catch (error) {
     console.error('Failed to parse Zip file:', error)
     message.error(t('ptoj.failed_import_testcases'), t('ptoj.failed_parse_zip_file'))
@@ -220,10 +227,10 @@ fetchTestcases()
 </script>
 
 <template>
-  <div class="-mt-6 lg:-mt-11 p-0">
-    <div class="border-b border-surface flex flex-wrap gap-4 items-center justify-between p-6">
-      <div class="flex font-semibold gap-4 items-center">
-        <i class="pi pi-database text-2xl" />
+  <div class="p-0 -mt-6 lg:-mt-11">
+    <div class="flex flex-wrap items-center justify-between gap-4 p-6 border-b border-surface">
+      <div class="flex items-center gap-4 font-semibold">
+        <i class="text-2xl pi pi-database" />
         <h1 class="text-xl">
           {{ t('ptoj.testcases') }}
         </h1>
@@ -252,7 +259,7 @@ fetchTestcases()
 
       <Column :header="t('ptoj.files')">
         <template #body="{ data }">
-          <div class="flex gap-2 items-center">
+          <div class="flex items-center gap-2">
             <a :href="testcaseUrl(problem.pid, data.uuid, 'in')" target="_blank" class="text-primary">
               {{ t('ptoj.input') }}
             </a>
@@ -264,7 +271,7 @@ fetchTestcases()
         </template>
       </Column>
 
-      <Column class="px-6 py-1 w-20">
+      <Column class="w-20 px-6 py-1">
         <template #body="{ data }">
           <Button icon="pi pi-trash" severity="danger" text @click="handleDeleteTestcase(data)" />
         </template>
@@ -292,14 +299,14 @@ fetchTestcases()
 
     <Dialog
       v-model:visible="importDialog" modal :header="t('ptoj.import_testcases')" :closable="false"
-      class="max-w-3xl mx-6 w-full"
+      class="w-full max-w-3xl mx-6"
     >
       <div class="space-y-4">
         <p>{{ t('ptoj.import_testcases_desc', { count: parsedTestcases.length }) }}</p>
 
         <DataTable
           :value="parsedTestcases" :rows="5" scrollable scroll-height="400px"
-          class="border-surface border-t mt-4"
+          class="mt-4 border-t border-surface"
         >
           <Column :header="t('ptoj.input')" field="inputName">
             <template #body="{ data }">
@@ -315,7 +322,7 @@ fetchTestcases()
       </div>
 
       <template #footer>
-        <div class="flex gap-2 justify-end">
+        <div class="flex justify-end gap-2">
           <Button
             :label="t('ptoj.cancel')" icon="pi pi-times" severity="secondary" outlined :disabled="importLoading"
             @click="cancelImport"

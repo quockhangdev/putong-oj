@@ -88,7 +88,7 @@ export async function exportTestcases (ctx: Context) {
     }
 
     const zipBlob = await zipWriter.close()
-    const filename = `PutongOJ-testcases-problem-${pid}-${Date.now()}.zip`
+    const filename = `CTUOJ-testcases-problem-${pid}-${Date.now()}.zip`
 
     ctx.set('Content-Type', 'application/zip')
     ctx.set('Content-Disposition', `attachment; filename="${filename}"`)
@@ -114,18 +114,19 @@ export async function createTestcase (ctx: Context) {
 
   const testin = ctx.request.body.in || ''
   const testout = ctx.request.body.out || ''
+  const fname = ctx.request.body.fname || ''
 
   if (!testin && !testout) {
     ctx.throw(400, 'Cannot create testcase without both input and output')
   }
 
   /**
-   * 拿到输入输出的测试文件，然后将它移动到专门放测试数据的地方
-   * 记得中间要修改对应的 meta.json
+   * Obtain the input/output test files and move them into the dedicated test data directory.
+   * Remember to update the corresponding meta.json accordingly.
    */
 
   const testDir = path.resolve(__dirname, `../../data/${pid}`)
-  const id = uuid() // 快速生成RFC4122 UUID
+  const id = uuid() // Generate an RFC4122 UUID
 
   // 将文件读取到meta对象
   const meta = await fse.readJson(path.resolve(testDir, 'meta.json'))
@@ -134,7 +135,7 @@ export async function createTestcase (ctx: Context) {
   })
 
   await Promise.all([
-    // 将test.in等文件写入本地文件，如果父级目录不存在(即testDir)，创建它
+    // Write files like test.in to the local filesystem. If the parent directory (i.e. testDir) doesn't exist, create it
     fse.outputFile(path.resolve(testDir, `${id}.in`), testin),
     fse.outputFile(path.resolve(testDir, `${id}.out`), testout),
     fse.outputJson(path.resolve(testDir, 'meta.json'), meta, { spaces: 2 }),
