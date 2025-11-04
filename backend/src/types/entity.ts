@@ -3,7 +3,7 @@ import type { ObjectId } from 'mongoose'
 import type { ContestOption, CourseRole } from '.'
 import type { CourseDocument } from '../models/Course'
 import type { UserEntity } from '../models/User'
-import type { encrypt, problemType, status, tagColors } from '../utils/constants'
+import type { encrypt, problemType, status, tagColors, privilege } from '../utils/constants'
 
 // Common
 
@@ -174,6 +174,7 @@ export type ContestEntityView = Pick<ContestEntity,
 export interface ContestRanklist {
   [uid: string]: {
     nick: string
+    privilege: typeof privilege[keyof typeof privilege]
     [pid: number]: {
       acceptedAt?: number
       failed: number

@@ -7,7 +7,7 @@ import { escapeRegExp } from 'lodash'
 import Contest from '../models/Contest'
 import Solution from '../models/Solution'
 import User from '../models/User'
-import { contestType, judge, status } from '../utils/constants'
+import { contestType, judge, status, privilege } from '../utils/constants'
 
 export async function findContests (
   opt: PaginateOption & {
@@ -110,7 +110,7 @@ export async function getRanklist (
     }
 
     if (!ranklist[uid]) {
-      ranklist[uid] = { nick: '' }
+      ranklist[uid] = { nick: '', privilege: privilege.User }
       userIdSet.add(uid)
     }
     if (!ranklist[uid][pid]) {
@@ -159,15 +159,16 @@ export async function getRanklist (
   const users = await User
     .find(
       { uid: { $in: Array.from(userIdSet) } },
-      { _id: 0, uid: 1, nick: 1 },
+      { _id: 0, uid: 1, nick: 1, privilege: 1 },
     )
     .lean()
   const userNickMap = Object
     .fromEntries(users.map(
-      user => [ user.uid, user.nick ],
+      user => [ user.uid, { nick: user.nick, privilege: user.privilege } ],
     ))
   Object.keys(ranklist).forEach((uid) => {
-    ranklist[uid].nick = userNickMap[uid]
+    ranklist[uid].nick = userNickMap[uid].nick
+    ranklist[uid].privilege = userNickMap[uid].privilege
   })
 
   return ranklist
