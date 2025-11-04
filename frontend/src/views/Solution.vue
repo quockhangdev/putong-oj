@@ -124,7 +124,7 @@ function calculateScore () {
     for (const testcase of solution.testcases || []) {
       totalScore += (testcase.judge === 3 ? 1 : 0)
     }
-    return `(${totalScore} / ${solution.testcases?.length})`
+    return `(${totalScore} / ${solution.testcases?.length} ~ ${((totalScore / (solution.testcases?.length || 1)) * 100).toFixed(2)}%)`
   }
   return null
 }
