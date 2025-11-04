@@ -313,7 +313,7 @@ fetchTestcases()
       <div class="flex items-center gap-4 font-semibold">
         <i class="text-2xl pi pi-database" />
         <h1 class="text-xl">
-          {{ t('ptoj.testcases') }}
+          {{ t('ptoj.testcases') }} {{ `(${docs.length})` }}
         </h1>
       </div>
       <div class="flex gap-2">
