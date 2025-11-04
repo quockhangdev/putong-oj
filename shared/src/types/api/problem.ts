@@ -31,6 +31,8 @@ export type ProblemSolutionListQueryResult = z.input<typeof ProblemSolutionListQ
 
 export const ProblemTestcaseListQueryResultSchema = z.array(z.object({
   uuid: z.string(),
+  fin: z.string().optional(),
+  fout: z.string().optional(),
 }))
 
 export type ProblemTestcaseListQueryResult = z.input<typeof ProblemTestcaseListQueryResultSchema>
@@ -38,6 +40,8 @@ export type ProblemTestcaseListQueryResult = z.input<typeof ProblemTestcaseListQ
 export const ProblemTestcaseCreatePayloadSchema = z.object({
   in: z.string(),
   out: z.string(),
+  fin: z.string().optional(),
+  fout: z.string().optional(),
 })
 
 export type ProblemTestcaseCreatePayload = z.infer<typeof ProblemTestcaseCreatePayloadSchema>

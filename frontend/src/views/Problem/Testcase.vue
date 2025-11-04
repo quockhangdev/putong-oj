@@ -83,6 +83,72 @@ function handleDeleteTestcase (item: ProblemTestcaseListQueryResult[number]) {
   })
 }
 
+async function handleDeleteAllTestcases () {
+  if (docs.value.length === 0) return
+
+  confirm.require({
+    message: t('ptoj.delete_all_confirm_message') || t('ptoj.delete_confirm_message'),
+    rejectProps: {
+      label: t('ptoj.cancel'),
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: t('ptoj.delete'),
+      severity: 'danger',
+    },
+    accept: async () => {
+      loading.value = true
+      try {
+        const promises = docs.value.map(item => removeTestcase(problem.value.pid, item.uuid))
+        const results = await Promise.allSettled(promises)
+
+        let successCount = 0
+        let errorCount = 0
+
+        for (const r of results) {
+          if (r.status === 'fulfilled' && r.value && r.value.success) {
+            successCount++
+          } else {
+            errorCount++
+            console.warn('Failed to delete testcase:', r)
+          }
+        }
+
+        // Refresh list from server to get consistent state
+        await fetchTestcases()
+
+        if (successCount > 0) {
+          if (errorCount === 0) {
+            message.success(
+              t('ptoj.successful_delete_all_testcases'),
+              t('ptoj.successful_delete_all_testcases_detail'),
+            )
+          } else {
+            message.success(
+              t('ptoj.successful_delete_testcase'),
+              t('ptoj.successful_delete_testcase_detail', { id: `${successCount}` }),
+            )
+            message.error(
+              t('ptoj.failed_delete_testcases'),
+              t('ptoj.failed_delete_testcases_detail', { count: errorCount }),
+            )
+          }
+        } else {
+          message.error(t('ptoj.failed_delete_testcases'), t('ptoj.no_testcase_deleted'))
+        }
+      } catch (err) {
+        console.error('Unexpected error deleting all testcases:', err)
+        message.error(t('ptoj.failed_delete_testcases'), t('ptoj.unknown_error'))
+      } finally {
+        loading.value = false
+      }
+    },
+    okText: t('oj.ok'),
+    cancelText: t('oj.cancel'),
+  })
+}
+
 async function handleCreateTestcase () {
   if (!testcase.value.in.trim() && !testcase.value.out.trim()) {
     message.error(t('ptoj.failed_create_testcase'), t('ptoj.testcase_cannot_both_empty'))
@@ -111,6 +177,8 @@ async function createTestcaseRequest (testcase: ProblemTestcaseCreatePayload) {
   const resp = await createTestcase(problem.value.pid, {
     in: testcase.in.replace(/\r\n/g, '\n'),
     out: testcase.out.replace(/\r\n/g, '\n'),
+    fin: '',
+    fout: '',
   })
   loading.value = false
 
@@ -244,6 +312,8 @@ fetchTestcases()
         />
         <Button icon="pi pi-upload" :label="t('ptoj.import')" outlined severity="secondary" @click="handleImportZip" />
         <input ref="fileInputRef" type="file" accept=".zip" class="hidden" @change="onFileSelected">
+        <Button icon="pi pi-trash" label="Delete All" outlined severity="danger" 
+          :disabled="docs.length === 0" @click="() => handleDeleteAllTestcases()" />
       </div>
     </div>
 

@@ -31,7 +31,6 @@ export async function findTestcases (ctx: Context) {
   } else {
     meta = await fse.readJson(file)
   }
-
   const result = ProblemTestcaseListQueryResultSchema.parse(meta.testcases)
   return createEnvelopedResponse(ctx, result)
 }

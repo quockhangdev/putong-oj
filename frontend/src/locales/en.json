@@ -211,5 +211,11 @@
   "username_invalid_detail": "Username must be between 3 and 20 characters and can only contain letters, numbers, underscores, and hyphens",
   "welcome_back": "Welcome back, {username}!",
   "contest_type": "Contest Type",
-  "ranklist_visibility": "Ranklist Visibility"
+  "ranklist_visibility": "Ranklist Visibility",
+  "delete_all_confirm_message": "Are you sure you want to delete ALL testcases? This action cannot be undone.",
+  "successful_delete_all_testcases": "Successfully deleted all testcases",
+  "successful_delete_all_testcases_detail": "All testcases have been deleted successfully",
+  "failed_delete_testcases": "Failed to delete all testcases",
+  "unknown_error": "Unknown error occurred",
+  "failed_delete_testcases_detail": "An unknown error occurred while deleting all testcases"
 }
