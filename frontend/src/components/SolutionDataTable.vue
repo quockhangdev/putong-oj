@@ -62,7 +62,7 @@ function handleViewContest (data: any) {
 
 function showPercentage (data: any): string {
   if (data.judge === JudgeStatus.PartiallyAccepted && data.percentile && data.percentile > 0) {
-    return `(${data.percentile}%)`
+    return `${data.percentile}%`
   }
   return ''
 }
@@ -137,9 +137,9 @@ function showPercentage (data: any): string {
         <div class="flex items-center">
           <span :class="getJudgeStatusClassname(data.judge as JudgeStatus)">
             {{ judgeStatusLabels[data.judge as JudgeStatus] }} 
-            <span style="font-size: 10px; font-family: monospace;">
+            <Tag v-if="showPercentage(data)" class="ml-2 text-xs">
               {{ showPercentage(data) }}
-            </span>
+            </Tag>
           </span>
           <Tag
             v-if="data.sim" v-tooltip.top="t('ptoj.similarity_detected')" :class="getSimilarityClassname(data.sim)"

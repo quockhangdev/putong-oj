@@ -23,6 +23,7 @@ export const ContestSolutionListQueryResultSchema = PaginatedSchema(z.object({
   uid: SolutionModelSchema.shape.uid,
   language: SolutionModelSchema.shape.language,
   judge: SolutionModelSchema.shape.judge,
+  percentile: SolutionModelSchema.shape.percentile.optional(),
   time: SolutionModelSchema.shape.time,
   memory: SolutionModelSchema.shape.memory,
   sim: SolutionModelSchema.shape.sim,

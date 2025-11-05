@@ -299,16 +299,16 @@ onBeforeUnmount(clearAutoRefresh)
       background-color #f7f7f7
 
 .table-rank, .table-solve
-  min-width 70px
+  min-width 50px
 .table-uid
-  width 140px
-  max-width 140px
+  width 300px
+  max-width 300px
   text-align center
   white-space nowrap
   text-overflow ellipsis
   overflow hidden
 .table-nick
-  min-width 210px
+  min-width 150px
   line-break anywhere
 td.table-nick
   text-align left
