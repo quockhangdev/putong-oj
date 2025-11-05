@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends SolutionModelDataTable">
-import type { JudgeStatus, Language } from '@putongoj/shared'
+import { JudgeStatus, Language } from '@putongoj/shared'
 import type { SolutionModelDataTable } from '@/types'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
@@ -59,6 +59,14 @@ function handleViewContest (data: any) {
   if (!data.mid || data.mid <= 0) return
   router.push({ name: 'contestOverview', params: { cid: data.mid } })
 }
+
+function showPercentage (data: any): string {
+  if (data.judge === JudgeStatus.PartiallyAccepted && data.percentile && data.percentile > 0) {
+    return `(${data.percentile}%)`
+  }
+  return ''
+}
+
 </script>
 
 <template>
@@ -128,7 +136,10 @@ function handleViewContest (data: any) {
       <template #body="{ data }">
         <div class="flex items-center">
           <span :class="getJudgeStatusClassname(data.judge as JudgeStatus)">
-            {{ judgeStatusLabels[data.judge as JudgeStatus] }}
+            {{ judgeStatusLabels[data.judge as JudgeStatus] }} 
+            <span style="font-size: 10px; font-family: monospace;">
+              {{ showPercentage(data) }}
+            </span>
           </span>
           <Tag
             v-if="data.sim" v-tooltip.top="t('ptoj.similarity_detected')" :class="getSimilarityClassname(data.sim)"

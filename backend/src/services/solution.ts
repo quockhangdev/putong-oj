@@ -53,6 +53,7 @@ export async function findSolutions (
     limit: pageSize,
     lean: true,
     leanWithId: false,
+    leanWithVirtuals: true,
   }
   return await Solution.paginate(filter, query) as any
 }

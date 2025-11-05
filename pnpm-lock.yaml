@@ -69,6 +69,9 @@ importers:
       mongoose:
         specifier: ^8.19.2
         version: 8.19.2(socks@2.8.7)
+      mongoose-lean-virtuals:
+        specifier: ^2.0.1
+        version: 2.0.1(mongoose@8.19.2(socks@2.8.7))
       mongoose-paginate-v2:
         specifier: ^1.9.1
         version: 1.9.1(mongoose@8.19.2(socks@2.8.7))
@@ -222,7 +225,7 @@ importers:
         version: 2.8.8
       axios:
         specifier: ^1.13.1
-        version: 1.13.1
+        version: 1.13.1(debug@4.4.3)
       csv-stringify:
         specifier: ^6.6.0
         version: 6.6.0
@@ -4838,6 +4841,12 @@ packages:
     peerDependencies:
       mongoose: '>=5.11.10'
 
+  mongoose-lean-virtuals@2.0.1:
+    resolution: {integrity: sha512-SJ/p7TNfn5iMSd5I/trc79BuJg48/4jHlbSLlBMzCSa6ncv6CNyoyou6fipFzdVeauB1qV67qWj2Nk2DzM4iYQ==}
+    engines: {node: '>=16.20.1'}
+    peerDependencies:
+      mongoose: '>=8.0.0'
+
   mongoose-paginate-v2@1.9.1:
     resolution: {integrity: sha512-DgURdWkPCeY6cuzkONk0snkFFG/l6ABABDkV3PyW/M2XGvfK/yP4i6Y/PuXkqhfVxKHFLvZ/qBnQxkGzzvo43Q==}
     engines: {node: '>=4.0.0'}
@@ -8851,14 +8860,6 @@ snapshots:
       - rollup
       - supports-color
 
-  axios@1.13.1:
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.3.7)
-      form-data: 4.0.4
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
   axios@1.13.1(debug@4.4.3):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
@@ -8866,7 +8867,6 @@ snapshots:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
-    optional: true
 
   b4a@1.7.3: {}
 
@@ -10158,7 +10158,6 @@ snapshots:
   follow-redirects@1.15.11(debug@4.4.3):
     optionalDependencies:
       debug: 4.4.3(supports-color@5.5.0)
-    optional: true
 
   foreground-child@2.0.0:
     dependencies:
@@ -11430,6 +11429,11 @@ snapshots:
       socks: 2.8.7
 
   mongoose-lean-virtuals@1.1.1(mongoose@8.19.2(socks@2.8.7)):
+    dependencies:
+      mongoose: 8.19.2(socks@2.8.7)
+      mpath: 0.8.4
+
+  mongoose-lean-virtuals@2.0.1(mongoose@8.19.2(socks@2.8.7)):
     dependencies:
       mongoose: 8.19.2(socks@2.8.7)
       mpath: 0.8.4

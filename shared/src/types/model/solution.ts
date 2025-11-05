@@ -19,6 +19,7 @@ export const SolutionModelSchema = z.object({
   length: z.int().nonnegative(),
   language: z.enum(Language),
   judge: z.enum(JudgeStatus),
+  percentile: z.number().min(0).max(100).optional(),
   time: z.int().nonnegative(),
   memory: z.int().nonnegative(),
   error: z.string(),

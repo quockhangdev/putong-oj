@@ -1,6 +1,7 @@
 import type { Document, PaginateModel } from 'mongoose'
 import type { SolutionEntity } from '../types/entity'
 import mongoosePaginate from 'mongoose-paginate-v2'
+import mongooseLeanVirtuals from 'mongoose-lean-virtuals'
 import mongoose from '../config/db'
 import { judge, status } from '../utils/constants'
 import ID from './ID'
@@ -151,6 +152,17 @@ solutionSchema.virtual('isPartiallyAccepted').get(function () {
 solutionSchema.virtual('isPending').get(function () {
   return this.judge === judge.Pending
 })
+solutionSchema.virtual('percentile').get(function () {
+  if (this.testcases.length === 0) {
+    return 0
+  }
+  const passed = this.testcases.filter(
+    (tc: any) => tc.judge === judge.Accepted,
+  ).length
+  return Math.floor((passed / this.testcases.length) * 100)
+})
+
+solutionSchema.plugin(mongooseLeanVirtuals)
 
 solutionSchema.index({ createdAt: -1 })
 solutionSchema.index({ judge: 1, createdAt: -1 })
@@ -158,6 +170,9 @@ solutionSchema.index({ uid: 1, createdAt: -1 })
 solutionSchema.index({ pid: 1, createdAt: -1 })
 solutionSchema.index({ mid: 1, createdAt: -1 })
 solutionSchema.index({ language: 1, createdAt: -1 })
+
+solutionSchema.set('toJSON', { virtuals: true });
+solutionSchema.set('toObject', { virtuals: true });
 
 solutionSchema.pre('save', async function (next) {
   if (this.sid === -1) {
