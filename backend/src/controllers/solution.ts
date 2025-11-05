@@ -95,6 +95,7 @@ const create = async (ctx: Context) => {
 
   let course = null
   let ctype = null
+  let cend = true // If the problem is from contest, and the contest is ended
   if (mid > 0) {
     const mid = Number.parseInt(opt.mid)
     const contest = await Contest.findOne({ cid: mid }).populate('course')
@@ -102,6 +103,7 @@ const create = async (ctx: Context) => {
       ctx.throw(400, 'No such a contest')
     }
     ctype = contest.option.type
+    cend = false
     if (contest.end < Date.now()) {
       ctx.throw(400, 'Contest is ended!')
     }
@@ -116,7 +118,9 @@ const create = async (ctx: Context) => {
   if (!problem) {
     ctx.throw(400, 'No such a problem')
   }
-  if (!profile.isAdmin && problem.status === status.Reserve) {
+  // Check problem status, only admin can submit reserved problems
+  // But contest problems can be submitted by participants during the contest
+  if (!profile.isAdmin && cend && problem.status === status.Reserve) {
     ctx.throw(400, 'Problem is under reserve')
   }
   /**
