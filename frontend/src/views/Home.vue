@@ -53,6 +53,9 @@ onRouteQueryUpdate(fetch)
     <div style="margin-bottom: 20px; margin-top: 10px;">
       <img src="https://www.cit.ctu.edu.vn/images/Banner-Logo/Banner_06-8-2025.jpg" alt="banner" style="width: 100%; object-fit: cover; border-radius: 3px;" />
     </div>
+    <div v-if="Date.now() < new Date('2025-11-09T00:00:00').getTime()" style="margin-bottom: 20px; margin-top: 10px;">
+      <img src="https://dmoj.ctu.edu.vn/uploads/jup0q55y3lkzvt534va1hewkv" alt="banner" style="width: 100%; object-fit: cover; border-radius: 3px;" />
+    </div>
     <div class="news-header">
       <!-- <span v-if="isZH" class="welcome-text">
         中国计量大学在线评测系统

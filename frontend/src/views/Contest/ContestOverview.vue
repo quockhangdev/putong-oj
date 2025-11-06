@@ -29,6 +29,9 @@ const cid = $computed(() => Number.parseInt(route.params.cid || 1))
       <h4>Contest type:
         <Tag :color="contest.option.type === contestType.OI ? 'green' : 'blue'">{{ Number.parseInt(contest.option.type || contestType.OI) === contestType.ICPC ? "ICPC" : "OI" }}</Tag>
       </h4>
+      <div v-if="contest.title.includes('CICT CPC')" style="margin-bottom: 50px; margin-top: 30px;">
+        <img src="https://dmoj.ctu.edu.vn/uploads/jup0q55y3lkzvt534va1hewkv" alt="banner" style="width: 100%; object-fit: cover; border-radius: 3px;" />
+      </div>
     </div>
     <div class="problem-table-container">
       <table class="problem-table">
