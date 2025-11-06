@@ -42,11 +42,23 @@ function onCopy (content: string) {
       </h2>
       <MarkdownPreview v-model="problem.input" class="cont" />
     </template>
+    <template v-if="problem.constraints?.trim()">
+      <h2 class="font-semibold">
+        {{ t('ptoj.constraints') }}
+      </h2>
+      <MarkdownPreview v-model="problem.constraints" class="cont" />
+    </template>
     <template v-if="problem.output?.trim()">
       <h2 class="font-semibold">
         {{ t('oj.output') }}
       </h2>
       <MarkdownPreview v-model="problem.output" class="cont" />
+    </template>
+    <template v-if="problem.scoring?.trim()">
+      <h2 class="font-semibold">
+        {{ t('ptoj.scoring') }}
+      </h2>
+      <MarkdownPreview v-model="problem.scoring" class="cont" />
     </template>
     <template v-if="problem.in?.trim()">
       <h2 class="font-semibold">

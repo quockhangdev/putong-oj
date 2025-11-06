@@ -10,7 +10,7 @@ const props = defineProps({
   modelValue: String,
   height: {
     type: Number,
-    default: 512,
+    default: 256,
   },
 })
 const emit = defineEmits([ 'update:modelValue' ])

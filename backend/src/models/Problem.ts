@@ -55,7 +55,15 @@ const problemSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  constraints: {
+    type: String,
+    default: '',
+  },
   output: {
+    type: String,
+    default: '',
+  },
+  scoring: {
     type: String,
     default: '',
   },

@@ -17,6 +17,8 @@ const problem = $ref({
   description: '',
   input: '',
   output: '',
+  constraints: '',
+  scoring: '',
   hint: '',
   in: '',
   out: '',
@@ -86,6 +88,7 @@ onMounted(() => {
     <br>
     <OJProblemEdit :problem="problem" />
     <Button type="primary" size="large" @click="submitCheck">
+      <span class="pi pi-cloud-upload" style="margin-right: 2px;"></span>
       {{ t('oj.submit') }}
     </Button>
   </div>

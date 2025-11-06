@@ -70,6 +70,18 @@ const { t } = useI18n()
     </FormItem>
     <FormItem>
       <template #label>
+        <span class="form-label">{{ t('ptoj.constraints') }}</span>
+      </template>
+      <MarkdownEditor v-model="problem.constraints" height="100"/>
+    </FormItem>
+    <FormItem>
+      <template #label>
+        <span class="form-label">{{ t('ptoj.scoring') }}</span>
+      </template>
+      <MarkdownEditor v-model="problem.scoring" height="100"/>
+    </FormItem>
+    <FormItem>
+      <template #label>
         <span class="form-label">{{ t('oj.sample_input') }}</span>
       </template>
       <Input v-model="problem.in" class="code-input" type="textarea" :rows="8" />

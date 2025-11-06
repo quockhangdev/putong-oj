@@ -41,17 +41,20 @@ export async function loadProblem (
     return ctx.throw(...ERR_NOT_FOUND)
   }
 
+  // Public problem -- allow access
   if (problem.status === status.Available) {
     ctx.state.problem = problem
     return problem
   }
 
+  // Admin users -- allow access
   const { profile } = ctx.state
   if (profile?.isAdmin) {
     ctx.state.problem = problem
     return problem
   }
 
+  // Problem is part of a contest the user has access to -- allow access
   const contestId = Number(ctx.request.query.cid)
   if (Number.isInteger(contestId) && contestId > 0) {
     const contest = await loadContest(ctx, contestId)
@@ -61,6 +64,7 @@ export async function loadProblem (
     }
   }
 
+  // User is the owner of the problem -- allow access
   if (problem.owner) {
     const owner = await User.findById(problem.owner).lean()
     if (owner && owner.uid === profile?.uid) {
@@ -69,7 +73,9 @@ export async function loadProblem (
     }
   }
 
-  if (profile && await courseService.hasProblemRole(
+  // User has basic role in a course containing this problem -- allow access
+  // But not if the problem is reserved
+  if (problem.status !== status.Reserve && profile && await courseService.hasProblemRole(
     profile.id, problem.id, 'basic',
   )) {
     ctx.state.problem = problem
@@ -195,7 +201,7 @@ const getProblem = async (ctx: Context) => {
 
   const response: ProblemEntityView = {
     ...pick(problem, [ 'pid', 'title', 'time', 'memory', 'status',
-      'description', 'input', 'output', 'in', 'out', 'hint' ]),
+      'description', 'input', 'output', 'in', 'out', 'hint', 'constraints', 'scoring' ]),
     type: canManage ? problem.type : undefined,
     code: canManage ? problem.code : undefined,
     tags: problem.tags.map(tagService.toItem),
@@ -230,7 +236,7 @@ const createProblem = async (ctx: Context) => {
   try {
     const problem = await problemService.createProblem({
       ...pick(opt, [ 'title', 'time', 'memory', 'status', 'description',
-        'input', 'output', 'in', 'out', 'hint', 'type', 'code' ]),
+        'input', 'output', 'in', 'out', 'hint', 'type', 'code', 'constraints', 'scoring' ]),
       owner,
     })
     if (course) {
@@ -269,7 +275,7 @@ const updateProblem = async (ctx: Context) => {
   try {
     const problem = await problemService.updateProblem(pid, {
       ...pick(opt, [ 'title', 'time', 'memory', 'status', 'description',
-        'input', 'output', 'in', 'out', 'hint', 'type', 'code' ]),
+        'input', 'output', 'in', 'out', 'hint', 'type', 'code', 'constraints', 'scoring' ]),
       tags: Array.isArray(opt.tags)
         ? await tagService.getTagObjectIds(
             opt.tags.map((id: any) => Number(id)).filter((id: number) => Number.isInteger(id) && id > 0),

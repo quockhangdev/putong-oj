@@ -217,5 +217,7 @@
   "successful_delete_all_testcases_detail": "All testcases have been deleted successfully",
   "failed_delete_testcases": "Failed to delete all testcases",
   "unknown_error": "Unknown error occurred",
-  "failed_delete_testcases_detail": "An unknown error occurred while deleting all testcases"
+  "failed_delete_testcases_detail": "An unknown error occurred while deleting all testcases",
+  "constraints": "Constraints",
+  "scoring": "Scoring"
 }

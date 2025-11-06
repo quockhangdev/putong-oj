@@ -91,6 +91,10 @@ export interface ProblemEntity extends Entity {
   input: string
   /** Output format description */
   output: string
+  /** Problem constraints */
+  constraints: string
+  /** Scoring description */
+  scoring: string
   /** Input example */
   in: string
   /** Output example */
@@ -109,7 +113,7 @@ export interface ProblemEntity extends Entity {
 
 export type ProblemEntityForm = Pick<ProblemEntity,
   'title' | 'time' | 'memory' | 'description' | 'input' | 'output' | 'in'
-  | 'out' | 'hint' | 'status' | 'type' | 'code' | 'owner'
+  | 'out' | 'hint' | 'status' | 'type' | 'code' | 'owner' | 'constraints' | 'scoring'
 > & {
   tags?: number[]
 }
@@ -127,7 +131,7 @@ export type ProblemEntityPreview = Pick<ProblemEntity,
 
 export type ProblemEntityView = Pick<ProblemEntity,
   'pid' | 'title' | 'time' | 'memory' | 'status' | 'description'
-  | 'input' | 'output' | 'in' | 'out' | 'hint'
+  | 'input' | 'output' | 'in' | 'out' | 'hint' | 'constraints' | 'scoring'
 > & Partial<Pick<ProblemEntity, 'type' | 'code'>> & {
   isOwner: boolean
   tags: TagEntityItem[]
