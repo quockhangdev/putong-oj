@@ -18,6 +18,8 @@ function createRatelimitMiddleware (
     errorMessage: 'Rate limit exceeded, please try again later.',
     id: id as any,
     max,
+    /* If the user is an admin, skip rate limiting */
+    whitelist: (ctx: Context) => ctx.state.profile?.isAdmin === true,
   }) as any
 }
 
