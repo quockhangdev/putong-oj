@@ -19,7 +19,7 @@ function createRatelimitMiddleware (
     id: id as any,
     max,
     /* If the user is an admin, skip rate limiting */
-    whitelist: (ctx: Context) => ctx.state.profile?.isAdmin === true,
+    whitelist: (ctx: Context) => !!ctx.state.profile?.isAdmin,
   }) as any
 }
 

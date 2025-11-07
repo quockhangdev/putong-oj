@@ -210,6 +210,9 @@ onRouteQueryUpdate(fetch)
       <table class="testcase-table">
         <thead>
           <tr>
+            <th class="testcase-index">
+              #
+            </th>
             <th class="testcase-uuid">
               {{ t('oj.uuid') }}
             </th>
@@ -235,6 +238,9 @@ onRouteQueryUpdate(fetch)
             </td>
           </tr>
           <tr v-for="(item, index) in solution.testcases" :key="index">
+            <td class="testcase-index">
+              {{ index + 1 }}
+            </td>
             <td class="testcase-uuid">
               <Poptip trigger="hover" placement="right">
                 <span><code>{{ item.uuid.slice(0, 8) }}</code></span>
@@ -328,8 +334,12 @@ onRouteQueryUpdate(fetch)
     &:hover
       background-color #f7f7f7
 
+.testcase-index
+  width 20px
+  padding-left 50px !important
+  text-align center
 .testcase-uuid
-  padding-left 40px !important
+  padding-left 50px !important
   text-align left
 .testcase-time, .testcase-memory
   width 100px
