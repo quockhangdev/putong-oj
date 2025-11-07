@@ -46,6 +46,8 @@ const joinFormRules = $computed(() => ({
 const joining = ref(false)
 const problemAddModal = ref(false)
 
+const FLUXLABS = 'FluxLabs'
+
 async function fetch () {
   loading.value = true
   await findCourse(courseId.value)
@@ -54,6 +56,9 @@ async function fetch () {
     && [ 'courseMembers', 'courseSettings' ].includes(displayTab.value)
   ) {
     router.push({ name: 'courseProblems', params: { id: courseId.value } })
+  }
+  if (course.value.name.includes(FLUXLABS)) {
+    router.push({ name: 'courseContests', params: { id: courseId.value } })
   }
   loading.value = false
 }
@@ -111,8 +116,11 @@ onProfileUpdate(fetch)
 
 <template>
   <div class="course-wrap" :class="{ 'course-wrap-edit': displayTab === 'courseSettings' }">
-    <Row class="course-header" justify="end">
+    <Row :class="['course-header', { 'bg-gradient-for-fluxlabs': course.name.includes(FLUXLABS) }]" justify="end">
       <Col flex="auto" class="course-header-col">
+        <div v-if="course.name.includes(FLUXLABS)">
+          <img src="https://dmoj.ctu.edu.vn/uploads/ecm7n0y3q6mu296rrdg1w0qze" alt="Course Logo" style="height: 80px; border-radius: 8px; margin-bottom: 10px;" />
+        </div>
         <h1 class="course-name">
           {{ spacing(course.name) }}
         </h1>
@@ -122,6 +130,11 @@ onProfileUpdate(fetch)
         <p v-else class="course-description">
           {{ t('oj.no_description') }}
         </p>
+        <div v-if="course.name.includes(FLUXLABS)" class="course-description" style="margin-top: 12px;">
+          <a style="word-break: break-all;" href="https://www.astromesh.xyz" target="_blank" rel="noopener noreferrer">
+            https://www.astromesh.xyz
+          </a>
+        </div>
       </Col>
       <Col v-if="isAdmin || role.manageProblem || role.manageContest" flex="none" class="course-header-col">
         <Space direction="vertical">
@@ -144,7 +157,7 @@ onProfileUpdate(fetch)
     </Row>
     <Auth :authority="role.basic">
       <Tabs class="course-tabs" :model-value="displayTab" @on-click="handleTabClick">
-        <TabPane :label="t('oj.course_problem')" name="courseProblems" />
+        <TabPane v-if="!course.name.includes('FluxLabs')" :label="t('oj.course_problem')" name="courseProblems" />
         <TabPane :label="t('oj.course_contest')" name="courseContests" />
         <TabPane v-if="role.manageCourse" :label="t('oj.course_member')" name="courseMembers" />
         <TabPane v-if="role.manageCourse" :label="t('oj.course_setting')" name="courseSettings" />
@@ -214,7 +227,7 @@ onProfileUpdate(fetch)
 
 .course-header
   padding 40px 40px 0
-  margin 0 -20px -20px 0
+  margin 0 0px -20px 0
   .course-header-col
     margin 0 20px 20px 0
   .course-name
@@ -224,6 +237,11 @@ onProfileUpdate(fetch)
   .course-description
     font-size 16px
     margin-bottom 0
+
+.bg-gradient-for-fluxlabs
+  background-image linear-gradient(135deg, #ffdc53 0%, #ffffff 100%)
+  border-top-left-radius 8px
+  border-top-right-radius 8px
 
 @media screen and (max-width: 1024px)
   .course-header
