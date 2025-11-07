@@ -130,11 +130,6 @@ onProfileUpdate(fetch)
         <p v-else class="course-description">
           {{ t('oj.no_description') }}
         </p>
-        <div v-if="course.name.includes(FLUXLABS)" class="course-description" style="margin-top: 12px;">
-          <a style="word-break: break-all;" href="https://www.astromesh.xyz" target="_blank" rel="noopener noreferrer">
-            https://www.astromesh.xyz
-          </a>
-        </div>
       </Col>
       <Col v-if="isAdmin || role.manageProblem || role.manageContest" flex="none" class="course-header-col">
         <Space direction="vertical">
