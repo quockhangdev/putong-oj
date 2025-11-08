@@ -11,11 +11,11 @@ accountRouter.get('/profile',
   accountController.getProfile,
 )
 accountRouter.post('/login',
-  ratelimitMiddleware.userLoginLimit,
+  // ratelimitMiddleware.userLoginLimit, // Temporarily disable login rate limit
   accountController.userLogin,
 )
 accountRouter.post('/register',
-  ratelimitMiddleware.userRegisterLimit,
+  // ratelimitMiddleware.userRegisterLimit, // Temporarily disable registration rate limit
   accountController.userRegister,
 )
 accountRouter.post('/logout',
