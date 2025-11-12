@@ -1,4 +1,5 @@
 import type { contestLabelingStyle, contestRanklistVisibility, contestType } from '../utils/constants'
+import type { Types } from 'mongoose'
 
 export interface CourseRole {
   basic: boolean
@@ -30,4 +31,8 @@ export interface PaginateOption {
 export interface SortOption {
   sort: 1 | -1
   sortBy: string
+}
+
+export interface DocumentId {
+  _id: Types.ObjectId
 }

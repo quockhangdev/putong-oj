@@ -1,4 +1,4 @@
-import type { Document, PaginateModel } from 'mongoose'
+import type { Document, PaginateModel, Types } from 'mongoose'
 import type { SolutionEntity } from '../types/entity'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import mongooseLeanVirtuals from 'mongoose-lean-virtuals'
@@ -6,7 +6,7 @@ import mongoose from '../config/db'
 import { judge, status } from '../utils/constants'
 import ID from './ID'
 
-export interface SolutionDocument extends Document, SolutionEntity {
+export interface SolutionDocument extends Document<Types.ObjectId>, SolutionEntity {
   isAccepted: boolean
   isPartiallyAccepted: boolean
   isPending: boolean

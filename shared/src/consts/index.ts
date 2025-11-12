@@ -1,4 +1,5 @@
 export * from './keywords.js'
+export * from './limit.js'
 export * from './regex.js'
 
 export enum ErrorCode {
@@ -72,4 +73,11 @@ export enum ExportFormat {
 export enum TestcaseFileType {
   Input = 'in',
   Output = 'out',
+}
+
+export enum DiscussionType {
+  OpenDiscussion = 1,
+  PublicAnnouncement = 2,
+  PrivateClarification = 3,
+  ArchivedDiscussion = 4,
 }
